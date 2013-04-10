@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context docBase="pruebaDS">
+<Resource name="jdbc/riki"
+            auth="Container"
+            type="javax.sql.DataSource"
+			username="postgres" 
+			password="postgres"
+            driverClassName="org.postgresql.Driver"
+			url="jdbc:postgresql://127.0.0.1/riki"
+            maxActive="8"
+            maxIdle="4"/>
+</Context>

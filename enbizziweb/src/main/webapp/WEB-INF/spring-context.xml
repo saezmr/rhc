@@ -1,0 +1,25 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans     
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+ 
+	<context:annotation-config />
+	<bean id="noticiasDAO" class="an.dpr.enbizzi.dao.NoticiasDAO"/>
+	<bean id="salidasDAO" class="an.dpr.enbizzi.dao.SalidasDAO"/>
+
+	<import resource="classpath:repository-context.xml" />
+ 
+<!-- 
+ <bean id="noticiasService" class="an.dpr.enbizzi.services.NoticiasService">
+		<property name="dao">
+			<ref bean="noticiasDAO"/>
+		</property>	
+	</bean>
+ -->	
+	
+ 
+</beans>
