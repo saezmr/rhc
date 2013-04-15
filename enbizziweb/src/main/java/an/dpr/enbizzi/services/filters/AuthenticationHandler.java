@@ -106,7 +106,7 @@ public class AuthenticationHandler implements RequestHandler {
 	    usuario.setLogin(policy.getUserName());
 	    usuario.setPassword(policy.getPassword());
 	    retUser = usuarioDao.login(usuario);
-	    log.debug(policy.getUserName()+" intenta logearse con resultado:"+null);
+	    log.debug(policy.getUserName()+" intenta logearse con resultado:"+retUser);
 	}
 	return retUser;
     }

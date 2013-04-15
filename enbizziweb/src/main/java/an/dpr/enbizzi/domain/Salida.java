@@ -1,5 +1,6 @@
 package an.dpr.enbizzi.domain;
 
+
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -22,8 +23,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import org.apache.log4j.Logger;
 
 import an.dpr.enbizzi.beans.Orache;
-import an.dpr.enbizzi.domain.CyclingType;
-import an.dpr.enbizzi.domain.Difficulty;
 import an.dpr.util.UtilFecha;
 
 @Entity
@@ -53,6 +52,7 @@ public class Salida implements Serializable {
     private Orache oracheStart;
     private Orache oracheStop;
     private List<Puerto> puertos;
+    private List<Socio> participantes;
 
     /**
      * @return the id
@@ -79,7 +79,7 @@ public class Salida implements Serializable {
     public Date getDate() {
 	return date;
     }
-    
+
     /**
      * @param date
      *            the date to set
@@ -186,11 +186,12 @@ public class Salida implements Serializable {
 
     @Override
     public String toString() {
-	return "BikeCalendar [id=" + idSalida + ", date=" + date + ", route=" + route
-		+ ", returnRoute=" + returnRoute + ", stop=" + stop + ", km="
-		+ km + ", elevationGain=" + elevationGain + ", difficulty="
-		+ difficulty + ", type=" + type + ", aemetCodeSalida="
-		+ aemetStart + ", aemetCodeDestino=" + aemetStop + "]";
+	return "BikeCalendar [id=" + idSalida + ", date=" + date + ", route="
+		+ route + ", returnRoute=" + returnRoute + ", stop=" + stop
+		+ ", km=" + km + ", elevationGain=" + elevationGain
+		+ ", difficulty=" + difficulty + ", type=" + type
+		+ ", aemetCodeSalida=" + aemetStart + ", aemetCodeDestino="
+		+ aemetStop + "]";
     }
 
     @Column
@@ -282,8 +283,8 @@ public class Salida implements Serializable {
      * clientes y evitar kbytes de mas
      */
     public void limpiarInfo() {
-	aemetStop = null;
-	aemetStart = null;
+	// aemetStop = null;
+	// aemetStart = null;
 	calendarVersion = null;
 	idSalida = null;
     }
@@ -291,25 +292,42 @@ public class Salida implements Serializable {
     /**
      * @return the puertos
      */
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     public List<Puerto> getPuertos() {
-        return puertos;
+	return puertos;
     }
 
     /**
-     * @param puertos the puertos to set
+     * @param puertos
+     *            the puertos to set
      */
     public void setPuertos(List<Puerto> puertos) {
-        this.puertos = puertos;
+	this.puertos = puertos;
     }
-    
-    public void addPuerto(Puerto puerto){
+
+    public void addPuerto(Puerto puerto) {
 	if (puerto != null) {
-	    if (puertos == null){
+	    if (puertos == null) {
 		puertos = new ArrayList<Puerto>();
 	    }
 	    puertos.add(puerto);
 	}
+    }
+
+    /**
+     * @return the participantes
+     */
+    @ManyToMany
+    public List<Socio> getParticipantes() {
+	return participantes;
+    }
+
+    /**
+     * @param participantes
+     *            the participantes to set
+     */
+    public void setParticipantes(List<Socio> participantes) {
+	this.participantes = participantes;
     }
 
 }

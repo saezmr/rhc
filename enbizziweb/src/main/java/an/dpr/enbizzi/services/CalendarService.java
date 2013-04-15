@@ -13,7 +13,9 @@ import javax.ws.rs.Produces;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import an.dpr.enbizzi.beans.CyclingType;
 import an.dpr.enbizzi.beans.Orache;
+import an.dpr.enbizzi.beans.SalidaInfo;
 import an.dpr.enbizzi.dao.SalidasDAO;
 import an.dpr.enbizzi.domain.Salida;
 import an.dpr.enbizzi.external.InfoAemet;
@@ -22,14 +24,14 @@ import an.dpr.enbizzi.external.InfoAemet;
  * Servicio REST de calendario de enbizzi varios WS todos GET, solo es de
  * consulta
  * 
+ * TODO no se ha contemplado el calendario BTT!!
+ * 
  * @author rsaez
  */
 @Path("/calendarWS/")
 public class CalendarService {
 
     private static final Logger log = Logger.getLogger(CalendarService.class);
-    private final static java.util.logging.Logger logging = 
-	    java.util.logging.Logger.getLogger(CalendarService.class.getName()); 
     @Autowired SalidasDAO dao;
     @Autowired InfoAemet aemet;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -42,17 +44,17 @@ public class CalendarService {
      */
     @GET
     @Path("/salida/{dia}")
-    public Salida getSalida(@PathParam("dia") String dia) {
+    public SalidaInfo getSalida(@PathParam("dia") String dia) {
 	Salida salida = obtenerSalida(dia);
-	return salida;
+	return SalidaInfo.getBean(salida);
     }
 
     @GET
     @Produces("application/json")
     @Path("/salidajson/{dia}")
-    public Salida getSalidaJSon(@PathParam("dia") String dia) {
+    public SalidaInfo getSalidaJSon(@PathParam("dia") String dia) {
 	Salida salida = obtenerSalida(dia);
-	return salida;
+	return SalidaInfo.getBean(salida);
     }
     
     private Salida obtenerSalida(String dia){
@@ -66,7 +68,6 @@ public class CalendarService {
 		    bcal.setOracheStart(orache[0]);
 		    bcal.setOracheStop(orache[1]);
 		}
-		bcal.limpiarInfo();
 	    }
 	}
 	return bcal != null ? bcal : new Salida();
@@ -89,7 +90,7 @@ public class CalendarService {
      */
     @GET
     @Path("/mes/{month},{year}")
-    public List<Salida> getCalendarioMes(@PathParam("month") String month,
+    public List<SalidaInfo> getCalendarioMes(@PathParam("month") String month,
 	    @PathParam("year") String year) {
 	log.debug("init");
 	List<Salida> ret = dao.findByMonth(Integer.valueOf(month),
@@ -98,25 +99,49 @@ public class CalendarService {
 	    s.limpiarInfo();
 	}
 	log.debug(ret);
-	return ret;
+	return SalidaInfo.getList(ret);
     }
 
+    @GET
+    @Path("/mes/{month},{year}")
+    public List<SalidaInfo> getCalendarioMesJson(
+	    @PathParam("month") String month,
+	    @PathParam("year") String year) {
+	return getCalendarioMes(month, year);
+    }
     /**
      * proximas citas, de los proximos 7 dias
      * 
      * @return
      */
     @GET
-    @Path("/proximas/")
-    public List<Salida> getProximasCitas() {
-	log.debug("init");
-	logging.finest("ma que chou");
-	List<Salida> ret = dao.findNext();
-	for(Salida s : ret){
-	    s.limpiarInfo();
-	}
+    @Path("/proximas/{tipo}")
+    public List<SalidaInfo> getProximasCitas(@PathParam("tipo") String tipo) {
+	log.debug("init, params: tipo="+tipo);
+	CyclingType type = getTipo(tipo);
+	List<Salida> ret = dao.findNext(type);
 	log.debug(ret);
-	return ret;
+	return SalidaInfo.getList(ret);
     }
 
+    @GET
+    @Produces("application/json")
+    @Path("/proximasjson/")
+    public List<SalidaInfo> getProximasCitasJson(@PathParam("tipo") String tipo) {
+	log.debug("init");
+	return getProximasCitas(tipo);
+    }
+
+    
+    private CyclingType getTipo(String tipo) {
+	CyclingType type = null;
+	if (tipo != null){
+	    try{
+		type = CyclingType.valueOf(tipo);
+	    } catch(IllegalArgumentException e){
+		log.info(tipo+" no es un tipo de ciclismo valido");
+	    }
+	}
+	return type;
+    }
 }

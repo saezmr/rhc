@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import an.dpr.enbizzi.beans.CyclingType;
 import an.dpr.enbizzi.domain.CalendarVersion;
 import an.dpr.enbizzi.domain.Salida;
 import an.dpr.enbizzi.jpa.repository.CalendarVersionRespository;
@@ -51,10 +52,16 @@ public class SalidasDAO {
 	return repo.findBetweenDates(fechas[0], fechas[1]);
     }
 
-    public List<Salida> findNext() {
+    public List<Salida> findNext(CyclingType type) {
+	List<Salida> list = null;
 	Date hoy = Calendar.getInstance().getTime();
 	Date f7d = UtilFecha.sumaDias(hoy, 7);
-	return repo.findBetweenDates(hoy, f7d);
+	if (type == null){
+	    list = repo.findBetweenDates(hoy, f7d);
+	} else {
+	    list = repo.findBetweenDatesType(hoy, f7d, type.getDomain());
+	}
+	return list;
     }
     
 //    public List<Salida> findLast(){
