@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import an.dpr.enbizzi.domain.Noticia;
-import an.dpr.enbizzi.jparepository.NoticiasRespository;
+import an.dpr.enbizzi.jpa.repository.NoticiasRespository;
 import an.dpr.util.UtilFecha;
 
 /**
@@ -28,8 +28,6 @@ public class NoticiasDAO {
 
     public Noticia save(Noticia noticia) {
 	return repo.save(noticia);
-	// TODO �apa puente para no database
-	// return noticia;
     }
 
     public List<Noticia> findByMonth(Integer month, Integer year) {

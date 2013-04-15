@@ -8,7 +8,7 @@
 			<!-- 
 			<property name="hibernate.connection.url" value="postgresql://$OPENSHIFT_POSTGRESQL_DB_HOST:$OPENSHIFT_POSTGRESQL_DB_PORT/enbizziweb" />
 			 -->
-			<property name="hibernate.connection.url" value="postgresql://127.3.239.1:5432/enbizziweb" />
+			<property name="hibernate.connection.url" value="jdbc:postgresql://127.3.239.1:5432/enbizziweb" />
 			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
 			<property name="hibernate.connection.username" value="admin" />
 			<property name="hibernate.connection.password" value="H_Xa_Mvi7_XI" />

@@ -8,8 +8,10 @@ import java.util.List;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import an.dpr.enbizzi.beans.Orache;
 import an.dpr.enbizzi.dao.SalidasDAO;
@@ -26,8 +28,10 @@ import an.dpr.enbizzi.external.InfoAemet;
 public class CalendarService {
 
     private static final Logger log = Logger.getLogger(CalendarService.class);
-    private SalidasDAO dao;
-    private InfoAemet aemet;
+    private final static java.util.logging.Logger logging = 
+	    java.util.logging.Logger.getLogger(CalendarService.class.getName()); 
+    @Autowired SalidasDAO dao;
+    @Autowired InfoAemet aemet;
     private static final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
     /**
@@ -39,6 +43,19 @@ public class CalendarService {
     @GET
     @Path("/salida/{dia}")
     public Salida getSalida(@PathParam("dia") String dia) {
+	Salida salida = obtenerSalida(dia);
+	return salida;
+    }
+
+    @GET
+    @Produces("application/json")
+    @Path("/salidajson/{dia}")
+    public Salida getSalidaJSon(@PathParam("dia") String dia) {
+	Salida salida = obtenerSalida(dia);
+	return salida;
+    }
+    
+    private Salida obtenerSalida(String dia){
 	Salida bcal = new Salida();
 	Date fecha = parseFecha(dia);
 	if (fecha != null) {
@@ -93,6 +110,7 @@ public class CalendarService {
     @Path("/proximas/")
     public List<Salida> getProximasCitas() {
 	log.debug("init");
+	logging.finest("ma que chou");
 	List<Salida> ret = dao.findNext();
 	for(Salida s : ret){
 	    s.limpiarInfo();
@@ -101,32 +119,4 @@ public class CalendarService {
 	return ret;
     }
 
-    /**
-     * @return the dao
-     */
-    public SalidasDAO getDao() {
-	return dao;
-    }
-
-    /**
-     * @param dao
-     *            the dao to set
-     */
-    public void setDao(SalidasDAO dao) {
-	this.dao = dao;
-    }
-
-    /**
-     * @return the aemet
-     */
-    public InfoAemet getAemet() {
-        return aemet;
-    }
-
-    /**
-     * @param aemet the aemet to set
-     */
-    public void setAemet(InfoAemet aemet) {
-        this.aemet = aemet;
-    }
 }

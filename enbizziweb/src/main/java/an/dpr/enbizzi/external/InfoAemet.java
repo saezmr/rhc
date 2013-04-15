@@ -35,9 +35,10 @@ public class InfoAemet {
     private static final Logger log = Logger.getLogger(InfoAemet.class);
     private static final SimpleDateFormat sdf = new SimpleDateFormat(
 	    "yyyy-MM-dd");
-    // private static final String AEMET_URL_BASE_1 =
-    // "http://www.aemet.es/xml/municipios/localidad_";
-    private static final String AEMET_URL_BASE_1 = "http://localhost:8080/EnbizziAppWeb/localidad_";
+    //TODO acordarse de cambiar ruta aemet de localhost a url real 
+     private static final String AEMET_URL_BASE_1 = 
+     "http://www.aemet.es/xml/municipios/localidad_";
+//    private static final String AEMET_URL_BASE_1 = "http://localhost:8080/EnbizziAppWeb/localidad_";
     private static final String AEMET_URL_BASE_2 = ".xml";
 
     public InfoAemet() {
@@ -118,7 +119,6 @@ public class InfoAemet {
 		ret.setProvincia(provincia);
 	    }
 	} catch (Exception e) {
-	    // TODO Auto-generated catch block
 	    log.error("", e);
 	}
 	return ret;

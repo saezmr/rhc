@@ -16,5 +16,6 @@ public enum SalidaXMLTags {
 	elevationGain,
 	type, 
 	aemetCodeStart,
-	aemetCodeStop;
+	aemetCodeStop,
+	puerto;
 }

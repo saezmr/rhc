@@ -6,12 +6,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import an.dpr.enbizzi.domain.CalendarVersion;
-import an.dpr.enbizzi.domain.Noticia;
 import an.dpr.enbizzi.domain.Salida;
-import an.dpr.enbizzi.jparepository.CalendarVersionRespository;
-import an.dpr.enbizzi.jparepository.SalidasRepository;
+import an.dpr.enbizzi.jpa.repository.CalendarVersionRespository;
+import an.dpr.enbizzi.jpa.repository.SalidasRepository;
 import an.dpr.util.UtilFecha;
 
 /**
@@ -53,6 +56,13 @@ public class SalidasDAO {
 	Date f7d = UtilFecha.sumaDias(hoy, 7);
 	return repo.findBetweenDates(hoy, f7d);
     }
+    
+//    public List<Salida> findLast(){
+//	Sort sort = new Sort(Sort.Direction.DESC, "date");
+//	Pageable pageable = new PageRequest(0, 5, sort);
+//	Page<Salida> page = repo.findAll(pageable);
+//	return page.getContent();
+//    }
 
     private static Date[] getFechasBusquedaMes(Integer month, Integer year) {
 	Date ini;

@@ -7,20 +7,20 @@ import javax.persistence.Id;
 @Entity
 public class CyclingType {
 
-    private int cyclingTypeId;
+    private Long cyclingTypeId;
     private String name;
     /**
      * @return the difficultyId
      */
     @Id
     @Column
-    public int getCyclingTypeId() {
+    public Long getCyclingTypeId() {
         return cyclingTypeId;
     }
     /**
      * @param difficultyId the difficultyId to set
      */
-    public void setCyclingTypeId(int cyclingTypeId) {
+    public void setCyclingTypeId(Long cyclingTypeId) {
         this.cyclingTypeId = cyclingTypeId;
     }
     /**

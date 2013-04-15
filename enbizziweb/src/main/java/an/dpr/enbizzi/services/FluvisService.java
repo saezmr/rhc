@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import an.dpr.enbizzi.dao.FluvisDAO;
 import an.dpr.enbizzi.domain.Fluvi;
@@ -24,7 +25,7 @@ public class FluvisService {
 
     private static final Logger log = Logger.getLogger(FluvisService.class);
     
-    private FluvisDAO dao;
+    @Autowired FluvisDAO dao;
 
     @GET
     @Path("/getFluvi/{id}")
@@ -69,17 +70,4 @@ public class FluvisService {
 	return anyo;
     }
 
-    /**
-     * @return the dao
-     */
-    public FluvisDAO getDao() {
-        return dao;
-    }
-
-    /**
-     * @param dao the dao to set
-     */
-    public void setDao(FluvisDAO dao) {
-        this.dao = dao;
-    }
 }

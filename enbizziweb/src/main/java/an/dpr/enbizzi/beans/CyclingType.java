@@ -1,20 +1,18 @@
 package an.dpr.enbizzi.beans;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import an.dpr.util.I18n;
 
 public enum CyclingType {
 
-    ROAD(1), MTB(2), BMX(3), INDOOR(4);
+    ROAD((long)1), MTB((long)2), BMX((long)3), INDOOR((long)4);
 
-    private int id;
+    private Long id;
 
-    private CyclingType(int id) {
+    private CyclingType(Long id) {
 	this.id = id;
     }
     
-    public static CyclingType get(int id) {
+    public static CyclingType get(Long id) {
 	CyclingType retValue = null;
 	if (ROAD.getId() == id) {
 	    retValue = ROAD;
@@ -28,7 +26,7 @@ public enum CyclingType {
 	return retValue;
     }
 
-    public int getId() {
+    public Long getId() {
 	return id;
     }
 

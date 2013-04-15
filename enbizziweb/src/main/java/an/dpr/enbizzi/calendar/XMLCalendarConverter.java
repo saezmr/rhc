@@ -6,32 +6,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
 import an.dpr.enbizzi.beans.CyclingType;
 import an.dpr.enbizzi.beans.Difficulty;
+import an.dpr.enbizzi.dao.PuertosDAO;
 import an.dpr.enbizzi.domain.Salida;
 
 public class XMLCalendarConverter {
 
+    @Autowired PuertosDAO puertosDAO;
     private static final Logger log = Logger
 	    .getLogger(XMLCalendarConverter.class);
-    // FIXME esto es solo para probar, hay que leerlo de internet
-    public static final String xmlText = "<calendar><year>2012</year><club>Enbizzi</club><version>1</version>"
-	    + "<event><date>03/03/2012</date><stop>Monegrillo</stop><route>Monegrillo</route>"
-	    + "<returnRoute>Monegrillo</returnRoute><difficulty>EASY</difficulty><km>87</km>"
-	    + "<elevationGain>269</elevationGain><type>ROAD</type></event><event><date>04/03/2012</date>"
-	    + "<stop>Parada</stop><route>Vamos por aqui</route><returnRoute>Volvemos por alla</returnRoute>"
-	    + "<difficulty>EASY</difficulty><km>71.3</km><elevationGain>135</elevationGain><type>MTB</type></event>"
-	    + "</calendar>";
-
+    
     public static final String nameSpace = null;
+    
+    /**
+     * Constructor vacio for spring
+     */
+    public XMLCalendarConverter(){}
 
-    private static final String TAG = XMLCalendarConverter.class.getName();
-
-    public static List<Salida> getCalendarViaNewPullParser(String xml)
+    public List<Salida> getCalendarViaNewPullParser(String xml)
 	    throws XmlPullParserException, IOException {
 	List<Salida> rv = null;
 	try {
@@ -48,7 +46,7 @@ public class XMLCalendarConverter {
 	return rv;
     }
 
-    private static List<Salida> readCalendar(XmlPullParser parser)
+    private List<Salida> readCalendar(XmlPullParser parser)
 	    throws XmlPullParserException, IOException {
 	log.debug("readCalendar");
 	List<Salida> list = new ArrayList<Salida>();
@@ -71,7 +69,7 @@ public class XMLCalendarConverter {
 	return list;
     }
 
-    private static Salida getCalendarItem(XmlPullParser parser)
+    private Salida getCalendarItem(XmlPullParser parser)
 	    throws XmlPullParserException, IOException {
 	Salida bCal = new Salida();
 	parser.require(XmlPullParser.START_TAG, nameSpace,
@@ -119,6 +117,9 @@ public class XMLCalendarConverter {
 		    case aemetCodeStop:
 			bCal.setAemetStop(Integer.valueOf(valor));
 			break;
+		    case puerto:
+			addPuerto(bCal, valor);
+			break;
 		    default:
 			break;
 		    }
@@ -129,7 +130,11 @@ public class XMLCalendarConverter {
 	return bCal;
     }
 
-    private static String readTag(XmlPullParser parser, SalidaXMLTags tag)
+    private void addPuerto(Salida bCal, String nombre) {
+	bCal.addPuerto(puertosDAO.findByNombre(nombre));
+    }
+
+    private String readTag(XmlPullParser parser, SalidaXMLTags tag)
 	    throws IOException, XmlPullParserException {
 	parser.require(XmlPullParser.START_TAG, nameSpace, tag.name());
 	String valor = null;
@@ -143,7 +148,7 @@ public class XMLCalendarConverter {
     }
 
     /** va saltando tags */
-    private static void skip(XmlPullParser parser)
+    private void skip(XmlPullParser parser)
 	    throws XmlPullParserException, IOException {
 	if (parser.getEventType() != XmlPullParser.START_TAG) {
 	    throw new IllegalStateException();
@@ -160,4 +165,5 @@ public class XMLCalendarConverter {
 	    }
 	}
     }
+
 }

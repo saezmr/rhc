@@ -7,6 +7,6 @@
 
 	<import resource="infrastructure.xml" />
 	
-    <jpa:repositories base-package="an.dpr.enbizzi.jparepository" />
+    <jpa:repositories base-package="an.dpr.enbizzi.jpa.repository" />
 	
 </beans>

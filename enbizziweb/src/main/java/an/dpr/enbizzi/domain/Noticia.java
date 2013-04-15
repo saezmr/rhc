@@ -10,15 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.log4j.Logger;
-
 @Entity
 @Table(name = "noticias")
 @XmlRootElement(name = "Noticia")
 public class Noticia {
 	
-	private static final Logger log = Logger.getLogger(Noticia.class);
-
 	private Long idNoticia;
 	private String titulo;
 	private String entradilla;

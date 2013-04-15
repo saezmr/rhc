@@ -3,12 +3,11 @@ package an.dpr.enbizzi.services;
 import java.util.List;
 
 import javax.ws.rs.FormParam;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import an.dpr.enbizzi.calendar.XMLCalendarConverter;
 import an.dpr.enbizzi.dao.SalidasDAO;
@@ -21,20 +20,21 @@ import an.dpr.enbizzi.domain.Salida;
  * 
  * @author rsaez
  */
-@Path("/privateCalendarWS/")
+@Path("/private/calendarWS/")
 public class PrivateCalendarService {
 
     private static final Logger log = Logger
 	    .getLogger(PrivateCalendarService.class);
 
-    private SalidasDAO dao;
+    @Autowired XMLCalendarConverter xmlCalendarConverter;
+    @Autowired SalidasDAO dao;
 
     @POST
-    @Path("/cargarCalendario/")
+    @Path("/admin/cargarCalendario/")
     public String cargarCalendario(@FormParam("xmlCalendar") String xmlCalendar) {
 	StringBuilder result = new StringBuilder();
 	try {
-	    List<Salida> list = XMLCalendarConverter
+	    List<Salida> list = xmlCalendarConverter
 		    .getCalendarViaNewPullParser(xmlCalendar);
 	    CalendarVersion cv = dao.newCalendarVersion();
 	    for (Salida cita : list) {
@@ -49,18 +49,4 @@ public class PrivateCalendarService {
 	return result.toString();
     }
 
-    /**
-     * @return the dao
-     */
-    public SalidasDAO getDao() {
-	return dao;
-    }
-
-    /**
-     * @param dao
-     *            the dao to set
-     */
-    public void setDao(SalidasDAO dao) {
-	this.dao = dao;
-    }
 }

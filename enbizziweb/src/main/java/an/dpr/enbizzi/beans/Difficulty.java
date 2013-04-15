@@ -4,15 +4,15 @@ import an.dpr.util.I18n;
 
 public enum Difficulty {
 
-    EASY(1), MEDIUM(2), HARD(3), VERY_HARD(4);
+    EASY((long)1), MEDIUM((long)2), HARD((long)3), VERY_HARD((long)4);
 
-    private int id;
+    private Long id;
 
-    private Difficulty(int id) {
+    private Difficulty(Long id) {
 	this.id = id;
     }
 
-    public static Difficulty get(int id) {
+    public static Difficulty get(Long id) {
 	Difficulty retValue = null;
 	if (EASY.getId() == id) {
 	    retValue = EASY;
@@ -26,7 +26,7 @@ public enum Difficulty {
 	return retValue;
     }
 
-    public int getId() {
+    public Long getId() {
 	return id;
     }
 

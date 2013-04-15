@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import an.dpr.enbizzi.domain.Fluvi;
-import an.dpr.enbizzi.jparepository.FluvisRepository;
+import an.dpr.enbizzi.jpa.repository.FluvisRepository;
 
 /**
  * DAO para los fluvis
@@ -16,8 +16,7 @@ import an.dpr.enbizzi.jparepository.FluvisRepository;
  */
 public class FluvisDAO {
 
-    @Autowired
-    FluvisRepository repo;
+    @Autowired FluvisRepository repo;
     
     public FluvisDAO(){}
 

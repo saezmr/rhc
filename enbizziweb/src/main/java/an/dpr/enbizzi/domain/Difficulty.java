@@ -7,20 +7,20 @@ import javax.persistence.Id;
 @Entity
 public class Difficulty {
 
-    private int difficultyId;
+    private Long difficultyId;
     private String name;
     /**
      * @return the difficultyId
      */
     @Id
     @Column
-    public int getDifficultyId() {
+    public Long getDifficultyId() {
         return difficultyId;
     }
     /**
      * @param difficultyId the difficultyId to set
      */
-    public void setDifficultyId(int difficultyId) {
+    public void setDifficultyId(Long difficultyId) {
         this.difficultyId = difficultyId;
     }
     /**

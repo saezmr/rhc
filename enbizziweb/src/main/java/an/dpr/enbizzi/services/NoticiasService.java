@@ -21,54 +21,43 @@ import an.dpr.enbizzi.domain.Noticia;
 @Path("/noticiasws/")
 public class NoticiasService {
 
-	private static final Logger log = Logger.getLogger(NoticiasService.class);
-	
-	private NoticiasDAO dao;
+    private static final Logger log = Logger.getLogger(NoticiasService.class);
 
-	public NoticiasService() {
-		log.debug("new instance");
-	}
+    @Autowired
+    NoticiasDAO dao;
 
-	@GET
-	@Path("/noticia/{id}")
-	public Noticia getNoticia(@PathParam("id") String id) {
-		log.debug("init");
-		Noticia ret = dao.findOne(Long.parseLong(id));
-		log.debug(ret);
-		return ret;
-	}
-	
-	@GET
-	@Path("/noticia/mes/{month},{year}")
-	public List<Noticia> getNoticiaMes(
-		@PathParam("month") String month
-		,@PathParam("year") String year
-		) {
-	    log.debug("init");
-	    List<Noticia> ret = dao.findByMonth(Integer.valueOf(month), 
-		    Integer.valueOf(year));
-	    log.debug(ret);
-	    return ret;
-	}
+    public NoticiasService() {
+	log.debug("new instance");
+    }
 
-	@Produces("application/json")
-	@GET
-	@Path("/noticiajson/{id}")
-	public Noticia getNoticiaJson(@PathParam("id") String id) {
-		log.debug("init");
-		Noticia ret = dao.findOne(Long.parseLong(id));
-		log.debug(ret);
-		return ret;
-	}
+    @GET
+    @Path("/noticia/{id}")
+    public Noticia getNoticia(@PathParam("id") String id) {
+	log.debug("init");
+	Noticia ret = dao.findOne(Long.parseLong(id));
+	log.debug(ret);
+	return ret;
+    }
 
-	public NoticiasDAO getDao() {
-		return dao;
-	}
+    @GET
+    @Path("/noticia/mes/{month},{year}")
+    public List<Noticia> getNoticiaMes(@PathParam("month") String month,
+	    @PathParam("year") String year) {
+	log.debug("init");
+	List<Noticia> ret = dao.findByMonth(Integer.valueOf(month),
+		Integer.valueOf(year));
+	log.debug(ret);
+	return ret;
+    }
 
-	@Autowired
-	public void setDao(NoticiasDAO dao) {
-		log.debug("setDAO("+dao+")");
-		this.dao = dao;
-	}
+    @Produces("application/json")
+    @GET
+    @Path("/noticiajson/{id}")
+    public Noticia getNoticiaJson(@PathParam("id") String id) {
+	log.debug("init");
+	Noticia ret = dao.findOne(Long.parseLong(id));
+	log.debug(ret);
+	return ret;
+    }
 
 }

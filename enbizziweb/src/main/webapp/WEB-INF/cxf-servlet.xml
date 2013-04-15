@@ -24,41 +24,32 @@
 	       ">
 
 	<context:annotation-config />
-	
+
 	<bean id="noticiasDAO" class="an.dpr.enbizzi.dao.NoticiasDAO" />
-	<bean id="salidasDAO" class="an.dpr.enbizzi.dao.SalidasDAO"/>
-	<bean id="infoAemet" class="an.dpr.enbizzi.external.InfoAemet"/>
+	<bean id="salidasDAO" class="an.dpr.enbizzi.dao.SalidasDAO" />
+	<bean id="puertosDAO" class="an.dpr.enbizzi.dao.PuertosDAO" />
+	<bean id="comarcasDAO" class="an.dpr.enbizzi.dao.ComarcasDAO" />
+	<bean id="usuariosDAO" class="an.dpr.enbizzi.dao.UsuariosDAO"/>
+	<bean id="fluvisDAO" class="an.dpr.enbizzi.dao.FluvisDAO"/>
 	
-	<bean id="authorizationFilter" class="an.dpr.enbizzi.services.filters.AuthenticationHandler"/>
+	<bean id="tablasAuxiliadesDAO" class="an.dpr.enbizzi.dao.TablasAuxiliaresDAO" />
+	<bean id="infoAemet" class="an.dpr.enbizzi.external.InfoAemet" />
+	<bean id="xmlCalendarConverter" class="an.dpr.enbizzi.calendar.XMLCalendarConverter"/>
+	<bean id="authorizationFilter" class="an.dpr.enbizzi.services.filters.AuthenticationHandler" />
 	<bean id="jaxbProvider" class="org.apache.cxf.jaxrs.provider.json.JSONProvider" />
 
 	<import resource="classpath:repository-context.xml" />
 
 	<jaxrs:server id="enbizziService" address="/">
 		<jaxrs:serviceBeans>
-			<bean class="an.dpr.enbizzi.services.NoticiasService">
-				<property name="dao">
-					<ref bean="noticiasDAO" />
-				</property>
-			</bean>
-			<bean class="an.dpr.enbizzi.services.PrivateNoticiasService">
-				<property name="dao">
-					<ref bean="noticiasDAO" />
-				</property>
-			</bean>
-			<bean class="an.dpr.enbizzi.services.CalendarService">
-				<property name="dao">
-					<ref bean="salidasDAO" />
-				</property>
-				<property name="aemet">
-					<ref bean="infoAemet" />
-				</property>
-			</bean>
-			<bean class="an.dpr.enbizzi.services.PrivateCalendarService">
-				<property name="dao">
-					<ref bean="salidasDAO" />
-				</property>
-			</bean>
+			<bean class="an.dpr.enbizzi.services.NoticiasService"/>
+			<bean class="an.dpr.enbizzi.services.PrivateNoticiasService"/>
+			<bean class="an.dpr.enbizzi.services.CalendarService"/>
+			<bean class="an.dpr.enbizzi.services.PrivateCalendarService"/>
+			<bean class="an.dpr.enbizzi.services.PuertosService" />
+			<bean class="an.dpr.enbizzi.services.PrivatePuertosService" />
+			<bean class="an.dpr.enbizzi.services.AdminService" />
+			<bean class="an.dpr.enbizzi.services.FluvisService" />
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<ref bean="authorizationFilter" />
@@ -70,3 +61,4 @@
 	</jaxrs:server>
 
 </beans>
+

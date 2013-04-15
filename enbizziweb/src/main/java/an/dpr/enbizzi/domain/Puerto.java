@@ -1,4 +1,4 @@
- package an.dpr.enbizzi.domain;
+package an.dpr.enbizzi.domain;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -11,16 +11,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "puertos")
+@XmlRootElement(name = "Puerto")
 public class Puerto {
 
     private Long idPuerto;
     private String nombre;
+    private String nombreExtendido;
     private String descripcion;
-    private String provincia;//TODO crear entidad provincia
+    private Comarca comarca;
     private Float km;
     private Integer desnivelMetros;
     private Float desnivelMedio;
@@ -50,7 +58,7 @@ public class Puerto {
     /**
      * @return the nombre
      */
-    @Column
+    @Column(unique=true)
     public String getNombre() {
 	return nombre;
     }
@@ -67,16 +75,16 @@ public class Puerto {
      * @return the descripcion
      */
     @Column
-    public String getDescripcion() {
-	return descripcion;
+    public String getNombreExtendido() {
+	return nombreExtendido;
     }
 
     /**
      * @param descripcion
      *            the descripcion to set
      */
-    public void setDescripcion(String descripcion) {
-	this.descripcion = descripcion;
+    public void setNombreExtendido(String nombreExtendido) {
+	this.nombreExtendido = nombreExtendido;
     }
 
     /**
@@ -147,8 +155,10 @@ public class Puerto {
      * @return the imagen
      */
     @Lob
-    @Basic(fetch=FetchType.LAZY)
-    @Column
+//    @Basic(fetch=FetchType.EAGER)
+    @Type(type = "org.hibernate.type.PrimitiveByteArrayBlobType")
+    @Column()
+//    @Transient
     public byte[] getImagen() {
 	return imagen;
     }
@@ -159,21 +169,6 @@ public class Puerto {
      */
     public void setImagen(byte[] imagen) {
 	this.imagen = imagen;
-    }
-
-    /**
-     * @return the provincia
-     */
-    @Column
-    public String getProvincia() {
-        return provincia;
-    }
-
-    /**
-     * @param provincia the provincia to set
-     */
-    public void setProvincia(String provincia) {
-        this.provincia = provincia;
     }
 
     /**
@@ -205,17 +200,47 @@ public class Puerto {
         this.fechaAlta = fechaAlta;
     }
     
+    /**
+     * @return the comarca
+     */
+    @ManyToOne
+    public Comarca getComarca() {
+        return comarca;
+    }
+
+    /**
+     * @param comarca the comarca to set
+     */
+    public void setComarca(Comarca comarca) {
+        this.comarca = comarca;
+    }
+
     /* (non-Javadoc)
      * @see java.lang.Object#toString()
      */
     @Override
     public String toString() {
 	return "Puerto [idPuerto=" + idPuerto + ", nombre=" + nombre
-		+ ", descripcion=" + descripcion + ", provincia=" + provincia
+		+ ", nombreExtendido=" + nombreExtendido + ", comarca=" + comarca
 		+ ", km=" + km + ", desnivelMetros=" + desnivelMetros
 		+ ", desnivelMedio=" + desnivelMedio + ", altitud=" + altitud
 		+ ", imagen=" + Arrays.toString(imagen) + ", revisado="
 		+ revisado + ", fechaAlta=" + fechaAlta + "]";
+    }
+
+    /**
+     * @return the descripcion
+     */
+    @Column
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    /**
+     * @param descripcion the descripcion to set
+     */
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
     }
 }
 
