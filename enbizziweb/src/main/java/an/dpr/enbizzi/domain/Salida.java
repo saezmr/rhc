@@ -1,11 +1,11 @@
 package an.dpr.enbizzi.domain;
 
-
 import java.io.Serializable;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,7 +14,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -52,7 +51,7 @@ public class Salida implements Serializable {
     private Orache oracheStart;
     private Orache oracheStop;
     private List<Puerto> puertos;
-    private List<Socio> participantes;
+    private Set<Socio> participantes;
 
     /**
      * @return the id
@@ -317,8 +316,8 @@ public class Salida implements Serializable {
     /**
      * @return the participantes
      */
-    @ManyToMany
-    public List<Socio> getParticipantes() {
+    @ManyToMany(targetEntity=Socio.class, fetch = FetchType.EAGER)
+    public Set<Socio> getParticipantes() {
 	return participantes;
     }
 
@@ -326,7 +325,7 @@ public class Salida implements Serializable {
      * @param participantes
      *            the participantes to set
      */
-    public void setParticipantes(List<Socio> participantes) {
+    public void setParticipantes(Set<Socio> participantes) {
 	this.participantes = participantes;
     }
 
