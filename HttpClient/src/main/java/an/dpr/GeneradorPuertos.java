@@ -22,7 +22,7 @@ public class GeneradorPuertos {
 
     private HttpClient client;
     private static final Logger log = Logger.getLogger(GeneradorPuertos.class);
-    private static final String URL_ALTA = "http://localhost:8080/EnbizziAppWeb/rest/privatePuertosWS/puerto/";
+    private static final String URL_ALTA = "http://enbizziweb-dprsoft.rhcloud.com/rest/private/puertosWS/puerto/";
 
     public static void main(String[] args){
 	try {
@@ -110,18 +110,46 @@ public class GeneradorPuertos {
 	List<Puerto> ret = new ArrayList<Puerto>();
 	ret.add(getPuertoJaulin());
 	ret.add(getPuertoPedrosas());
-	ret.add(getPuertoAlcubierre());
-	ret.add(getPuertoMezalocha());
+	ret.add(getPuertoAlcubierreAlcubierre());
+	ret.add(getPuertoAlcubierreLecinena());
+	ret.add(getPuertoMezalochaNorte());
+	ret.add(getPuertoMezalochaSur());
 	ret.add(getPuertoCodos());
 	ret.add(getPuertoAguaron());
 	ret.add(getPuertoTosos());
 	ret.add(getPuertoAguilon());
 	ret.add(getPuertoVillanueva());
 	ret.add(getPuertoLaMuela());
-	ret.add(getPuertoSanEsteban());
-	ret.add(getPuertoValmadrid());
-	ret.add(getPuertoMonlora();)
+	ret.add(getPuertoSanEstebanNorte());
+	ret.add(getPuertoSanEstebanSur());
+	ret.add(getPuertoValmadridValmadrid());
+	ret.add(getPuertoValmadridLaPuebla());
+	ret.add(getPuertoMonlora());
 	return ret;
+    }
+
+    private static Puerto getPuertoMonlora() {
+	Puerto p = new Puerto();
+	p.setNombre("Monlora");
+	p.setNombreExtendido("Subida al Santuario de Monlora");
+	p.setKm((float)5.5);
+	return p;
+    }
+
+    private static Puerto getPuertoValmadridValmadrid() {
+	Puerto p = new Puerto();
+	p.setNombre("Valmadrid-Valmadrid");
+	p.setNombreExtendido("Alto de Valmadrid (por Valmadrid)");
+	p.setKm((float)5.5);
+	return p;
+    }
+
+    private static Puerto getPuertoValmadridLaPuebla() {
+	Puerto p = new Puerto();
+	p.setNombre("Valmadrid-LaPuebla");
+	p.setNombreExtendido("Alto de Valmadrid (por La Puebla)");
+	p.setKm((float)5.5);
+	return p;
     }
 
     private static Puerto getPuertoJaulin() {
@@ -139,20 +167,33 @@ public class GeneradorPuertos {
 	return p;
     }
 
-    private static Puerto getPuertoAlcubierre() {
-    	//TODO vertientes Alcubierre-Alcubierre y Alcubierre-Lecinena
+    private static Puerto getPuertoAlcubierreAlcubierre() {
 	Puerto p = new Puerto();
-	p.setNombre("Alcubierre");
-	p.setNombreExtendido("Alto de Alcubierre");
+	p.setNombre("Alcubierre-Alcubierre");
+	p.setNombreExtendido("Alto de Alcubierre(Por Alcubierre)");
+	p.setAltitud(500);
+	return p;
+    }
+    private static Puerto getPuertoAlcubierreLecinena() {
+	Puerto p = new Puerto();
+	p.setNombre("Alcubierre-Lecinena");
+	p.setNombreExtendido("Alto de Alcubierre(por Lecinena)");
 	p.setAltitud(500);
 	return p;
     }
 
-    private static Puerto getPuertoMezalocha() {
-    	//TODO vertientes Mezalocha-norte y Mezalocha-sur
+    private static Puerto getPuertoMezalochaNorte() {
 	Puerto p = new Puerto();
-	p.setNombre("Mezalocha");
-	p.setNombreExtendido("Alto de Mezalocha");
+	p.setNombre("Mezalocha-norte");
+	p.setNombreExtendido("Alto de Mezalocha(vertiente norte)");
+	p.setDesnivelMedio((float)4.25);
+	return p;
+    }
+    
+    private static Puerto getPuertoMezalochaSur() {
+	Puerto p = new Puerto();
+	p.setNombre("Mezalocha-sur");
+	p.setNombreExtendido("Alto de Mezalocha(vertiente sur)");
 	p.setDesnivelMedio((float)4.25);
 	return p;
     }
@@ -195,16 +236,22 @@ public class GeneradorPuertos {
 
     private static Puerto getPuertoLaMuela() {
 	Puerto p = new Puerto();
-	p.setNombre("Muela");
+	p.setNombre("LaMuela");
 	p.setNombreExtendido("Alto de la Muela (carretera antigua)");
 	return p;
     }
 
-    private static Puerto getPuertoSanEsteban() {
-    	//TODO vertientes sur y norte!
+    private static Puerto getPuertoSanEstebanNorte() {
 	Puerto p = new Puerto();
 	p.setNombre("SanEsteban-norte");
 	p.setNombreExtendido("Alto de San Esteban-Norte");
+	return p;
+    }
+    
+    private static Puerto getPuertoSanEstebanSur() {
+	Puerto p = new Puerto();
+	p.setNombre("SanEsteban-sur");
+	p.setNombreExtendido("Alto de San Esteban(vertiente sur)");
 	return p;
     }
     
