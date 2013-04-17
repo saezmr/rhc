@@ -118,7 +118,9 @@ public class GeneradorPuertos {
 	ret.add(getPuertoAguilon());
 	ret.add(getPuertoVillanueva());
 	ret.add(getPuertoLaMuela());
-	ret.add(getPuertoCastejon());
+	ret.add(getPuertoSanEsteban());
+	ret.add(getPuertoValmadrid());
+	ret.add(getPuertoMonlora();)
 	return ret;
     }
 
@@ -138,6 +140,7 @@ public class GeneradorPuertos {
     }
 
     private static Puerto getPuertoAlcubierre() {
+    	//TODO vertientes Alcubierre-Alcubierre y Alcubierre-Lecinena
 	Puerto p = new Puerto();
 	p.setNombre("Alcubierre");
 	p.setNombreExtendido("Alto de Alcubierre");
@@ -146,6 +149,7 @@ public class GeneradorPuertos {
     }
 
     private static Puerto getPuertoMezalocha() {
+    	//TODO vertientes Mezalocha-norte y Mezalocha-sur
 	Puerto p = new Puerto();
 	p.setNombre("Mezalocha");
 	p.setNombreExtendido("Alto de Mezalocha");
@@ -196,10 +200,11 @@ public class GeneradorPuertos {
 	return p;
     }
 
-    private static Puerto getPuertoCastejon() {
+    private static Puerto getPuertoSanEsteban() {
+    	//TODO vertientes sur y norte!
 	Puerto p = new Puerto();
-	p.setNombre("Castejon");
-	p.setNombreExtendido("Alto de San Esteban(Castejon de Valdejasa)");
+	p.setNombre("SanEsteban-norte");
+	p.setNombreExtendido("Alto de San Esteban-Norte");
 	return p;
     }
     
