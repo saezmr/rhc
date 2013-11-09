@@ -1,0 +1,2 @@
+2013/11/05
+-Add generacion de altimetrias con gpx y polar txt info.
