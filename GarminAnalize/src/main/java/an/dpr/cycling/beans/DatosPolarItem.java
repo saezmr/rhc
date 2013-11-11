@@ -1,9 +1,6 @@
 
 package an.dpr.cycling.beans;
 
-import an.dpr.cycling.altimetria.*;
-
-import java.io.Serializable;
 import java.util.Date;
 import java.util.StringTokenizer;
 
@@ -32,7 +29,13 @@ public class DatosPolarItem implements AltimetryPoint{
     public DatosPolarItem(){
     }
 
-    public void loadDatos(Integer id, String linea, ConfiguracionAltimetriaBean conf){
+    /**
+     * 
+     * @param id contador para ordenar
+     * @param linea lintea de texto de donde scar la info
+     * @param segundosRegistroPolar segundos de intervalo de registro de datos configurado en el aparato
+     */
+    public void loadDatos(Integer id, String linea, Integer segundosRegistroPolar){
         StringTokenizer st = new StringTokenizer(linea, "\t");
         this.setId(id);
         int cont = 0;
@@ -47,7 +50,7 @@ public class DatosPolarItem implements AltimetryPoint{
             }
             cont++;
         }
-        this.setSegundosIntervalo(conf.getSegundosIntervalo());
+        this.setSegundosIntervalo(segundosRegistroPolar);
         this.setMetros(getMetrosRecorridos());
     }
 

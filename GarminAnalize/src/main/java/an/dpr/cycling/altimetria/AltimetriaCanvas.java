@@ -11,7 +11,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -19,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import an.dpr.cycling.beans.AltimetryPoint;
 import an.dpr.cycling.beans.ConfiguracionAltimetriaBean;
+import an.dpr.cycling.beans.Rampa;
 
 /**
  * Historial CVS de $Id: AltimetriaCanvas.java $
@@ -34,13 +37,13 @@ import an.dpr.cycling.beans.ConfiguracionAltimetriaBean;
 public class AltimetriaCanvas extends Canvas{
 
     private static final Logger log = Logger.getLogger(AltimetriaCanvas.class);
-    private static final String RUTA_IMG = "/var/ganalize/altimetria.png";
     private Collection<AltimetryPoint> data = null;
     private double[][] puntos;
     private int porcentajeCadaMetros = 10000;
     private DecimalFormat df = new DecimalFormat("##0.##");
     private BufferedImage bImagen = null;
     private Image img = null;
+    private ConfiguracionAltimetriaBean conf;
 
     /**
      * MaximaX -> X maxima de la altimetria (aplicado el reductor)
@@ -76,8 +79,10 @@ public class AltimetriaCanvas extends Canvas{
     private double mostrarRampasMayores = 5;
     private String nombrePuerto = "";
     private boolean voltearAuto = true;
-    private int minMetrosCalcularPendiente = 50;
+    private int minMetrosCalcularPendiente = 50;//TODO a configuracion!!!
     private Double kmIni = 0.0;
+    private double[] pendienteKms;
+    private List<Rampa> rampas;
 
     //colores
     private Color colorLineas;
@@ -86,6 +91,7 @@ public class AltimetriaCanvas extends Canvas{
     private Color colorKmImpar;
     private Color colorKmPar;
     private Color colorHorizonte;
+    private Color colorRampas = Color.RED;//TODO
 
     public AltimetriaCanvas(Collection<AltimetryPoint> data,String nombre){
         this(data, 0.0, nombre, null, null, null, true);
@@ -110,6 +116,7 @@ public class AltimetriaCanvas extends Canvas{
 
     public AltimetriaCanvas(Collection<AltimetryPoint> data, Double kmIni, 
 	    String nombre, ConfiguracionAltimetriaBean conf) {
+	this.conf = conf;
         this.data = data;
         if (kmIni != null)
             this.kmIni = kmIni;
@@ -152,6 +159,8 @@ public class AltimetriaCanvas extends Canvas{
         this.puntos = obtenerPuntos();
         obtenerMaximos();
         obtenerPendienteMedia();        
+        pendienteKms = obtenerPendienteKm();
+        rampas = getRampas();
         bImagen = new BufferedImage(limiteX, limiteY, BufferedImage.TYPE_INT_RGB);
         crearImagen();
         img = bImagen.getScaledInstance(limiteX, limiteY, 1);
@@ -163,13 +172,14 @@ public class AltimetriaCanvas extends Canvas{
         g.setFont(new Font("Verdana", Font.PLAIN, 10));
         g.setColor(colorHorizonte);
         g.fillRect(0, 0, limiteX, limiteY);
-
+        
         crearLineasKm(g);
         limpiarHorizonte(g);
         escribirPendienteKms(g);
         crearPerfil(g);
         crearReglaAltitud(g);
         introducirTextos(g);
+        pintarRampas(g);
         
         g.dispose();
     }
@@ -223,37 +233,56 @@ public class AltimetriaCanvas extends Canvas{
      * TODO seria interesante sacar los portencentajes de rampa a otro metodo
      * @param g
      */
-    private void crearPerfil(Graphics g){
-        g.setColor(colorLineas);
-        double x = 1.0;
-        double y = puntos[1][1];
-        int contPorcentajes = 1;
-        Double xAc = 0.0;
-        Double yAc = new Double(puntos[1][1]);
-        boolean pendienteArriba = true;
-        for (int i = 1; i<puntos.length; i++){
-            double x2 = x+puntos[i][0];
-            double y2 = puntos[i][1];
-            if (x2/contPorcentajes >= porcentajeCadaMetros){
-                Double pendiente = new Double( ((y2-yAc)/(x2-xAc))*100);
-                if (pendiente >= mostrarRampasMayores){
-                    g.drawString(df.format(pendiente)+"%", calculaX(x2), pendienteArriba ? calculaY(y2)-25 : calculaY(y2)+25);
-
-                    g.setColor(colorLineasSuaves);
-                    g.drawLine(calculaX(x2) , calculaY(y2), calculaX(x2)-5, pendienteArriba ? calculaY(y2)-25 : calculaY(y2)+20);
-                    pendienteArriba = !pendienteArriba;
-                }
-                yAc = new Double(y2);
-                xAc = new Double(x2);
-                contPorcentajes++;
+    private void pintarRampas(Graphics g){
+	g.setColor(colorRampas);
+	boolean pendienteArriba = true;
+        for(Rampa rampa: rampas){
+            double x = rampa.getmIni();
+            double x2 = rampa.getmFin();
+            double y = rampa.getAltitudIni();
+            double y2 = rampa.getAltitudFin();
+            double pendiente = rampa.getPendiente();
+            for(int i=-2; i<3 ; i++){
+        	g.drawLine(calculaX(x), calculaY(y+i), calculaX(x2) , calculaY(y2+i));
             }
-            g.setColor(colorLineas);
-            if (x2 != 0){
-                g.drawLine(calculaX(x), calculaY(y), calculaX(x2) , calculaY(y2));
-            }
-            x = x2;
-            y = y2;
+            int offsetY2 = pendienteArriba ? -25 : 25;
+            g.drawString(df.format(pendiente)+"%", calculaX(x2), calculaY(y2)+offsetY2);
+            g.drawLine(calculaX(x2) , calculaY(y2), calculaX(x2)-5, calculaY(y2)+offsetY2);
+            pendienteArriba = !pendienteArriba;
         }
+    }
+    
+    private void crearPerfil(Graphics g){
+	g.setColor(colorLineas);
+	double x = 1.0;
+	double y = puntos[1][1];
+	int contPorcentajes = 1;
+	Double xAc = 0.0;
+	Double yAc = new Double(puntos[1][1]);
+	boolean pendienteArriba = true;
+	for (int i = 1; i<puntos.length; i++){
+	    double x2 = x+puntos[i][0];
+	    double y2 = puntos[i][1];
+	    if (x2/contPorcentajes >= porcentajeCadaMetros){
+		Double pendiente = new Double( ((y2-yAc)/(x2-xAc))*100);
+		if (pendiente >= mostrarRampasMayores){
+		    g.drawString(df.format(pendiente)+"%", calculaX(x2), pendienteArriba ? calculaY(y2)-25 : calculaY(y2)+25);
+		    
+		    g.setColor(colorLineasSuaves);
+		    g.drawLine(calculaX(x2) , calculaY(y2), calculaX(x2)-5, pendienteArriba ? calculaY(y2)-25 : calculaY(y2)+20);
+		    pendienteArriba = !pendienteArriba;
+		}
+		yAc = new Double(y2);
+		xAc = new Double(x2);
+		contPorcentajes++;
+	    }
+	    g.setColor(colorLineas);
+	    if (x2 != 0){
+		g.drawLine(calculaX(x), calculaY(y), calculaX(x2) , calculaY(y2));
+	    }
+	    x = x2;
+	    y = y2;
+	}
     }
 
     /**
@@ -292,14 +321,10 @@ public class AltimetriaCanvas extends Canvas{
             xPoints = new int[]{calculaX(i),calculaX(i),calculaX(i+1000),calculaX(i+1000)};
             yPoints = new int[]{yAltitudMaxima,yAltitudMinima, yAltitudMinima, yAltitudMaxima};
 
+            g.setColor(getColorKm(i));
+            g.fillPolygon(xPoints, yPoints, 4);
             g.setColor(colorLineasSuaves);
             g.drawLine(calculaX(i),yAltitudMaxima,calculaX(i),yAltitudMinima);
-            if ((i/1000)%2 > 0){
-                g.setColor(colorKmImpar);
-            } else {
-                g.setColor(colorKmPar);
-            }
-            g.fillPolygon(xPoints, yPoints, 4);
             
             if ((i/1000)%2 > 0){
                 g.setColor(Color.WHITE);
@@ -308,21 +333,116 @@ public class AltimetriaCanvas extends Canvas{
         }
         g.setColor(colorLineas);
     }
+    
+    private Color getColorKm(int km){
+	Color color = null;
+	if(ConfiguracionAltimetria.COLOR_KM_RAMPA.equals(conf.getColorKm())){
+	    if (pendienteKms[km/1000]>conf.getKmCinco()){
+		color = conf.getColorCinco(); 
+	    } else if (pendienteKms[km/1000]>conf.getKmCuatro()){
+		color = conf.getColorCuatro();
+	    } else if (pendienteKms[km/1000]>conf.getKmTres()){
+		color = conf.getColorTres();
+	    } else if (pendienteKms[km/1000]>conf.getKmDos()){
+		color = conf.getColorDos();
+	    } else {
+		color = conf.getColorUno();
+	    }
+	} else {
+	    if ((km/1000)%2 > 0){
+		color = colorKmImpar;
+	    } else {
+		color = colorKmPar;
+	    }
+	}
+	return color;
+    }
 
     /**
      * Escribe los km y sus pendientes medias
      * @param g
      */
     private void escribirPendienteKms(Graphics g){
-        double[] pendienteKm = obtenerPendienteKm();
         g.setColor(colorTexto);
         int kmMax = Double.valueOf(longitudMetros).intValue();
         for (int i = 0; i<=kmMax; i=i+1000){
-            g.drawString(df.format(pendienteKm[i/1000])+"%", calculaX(i)+2, yAltitudMinima-5);
+            g.drawString(df.format(pendienteKms[i/1000])+"%", calculaX(i)+2, yAltitudMinima-5);
             g.drawString(""+(i/1000), calculaX(i), yAltitudMinima+15);
         }
         g.drawString("Kms", calculaX(0), yAltitudMinima+30);
         g.setColor(colorLineas);
+    }
+    
+    /**
+     * Obtiene todas las posibles rampas de la ruta
+     * TODO filtrar rampas que se montan
+     * @return
+     */
+    public List<Rampa> getRampas(){
+	List<Rampa> list = new ArrayList<Rampa>();
+	List<Rampa> listAux = new ArrayList<Rampa>();
+	List<Rampa> listToDel = new ArrayList<Rampa>();
+	Double mAux = 0.0;
+	for (int i = 1; i<puntos.length; i++){
+	    double x = puntos[i][0];
+	    double y = puntos[i][1];
+	    Rampa rampa = getNewRampa(y, mAux);
+	    listAux.add(rampa);
+	    for(Rampa rl : listAux){
+		rl.setAltitudFin(y);
+		rl.setmFin(mAux);
+		rl.setMetros(rl.getMetros()+x);
+		if (rl.getMetros()>minMetrosCalcularPendiente){
+		    if (guardarRampa(rl)){
+			list.add(rl);
+		    }
+		    listToDel.add(rl);
+		}
+	    }
+	    listAux.removeAll(listToDel);
+	    mAux += x;
+	}
+	list = agruparRampas(list);
+	return list;
+    }
+
+    private List<Rampa> agruparRampas(List<Rampa> list) {
+	List<Rampa> ret = new ArrayList<Rampa>();
+	boolean add = true;
+	for(Rampa rampa : list){
+	    add = true;
+	    for(Rampa r : ret){
+		if (r.getmFin()>rampa.getmIni()){
+		    r.setmFin(rampa.getmFin());
+		    r.setAltitudFin(rampa.getAltitudFin());
+		    add = false;
+		}
+	    }
+	    if(add)
+		ret.add(rampa);
+	}
+	return ret;
+    }
+
+    private boolean guardarRampa(Rampa rl) {
+	boolean guardar = false;
+	if (rl.getMetros()>minMetrosCalcularPendiente){
+	    double altitud = rl.getAltitudFin()-rl.getAltitudIni();
+	    double pendiente = (altitud/rl.getMetros())*100;
+	    if (pendiente >mostrarRampasMayores){
+		rl.setPendiente(pendiente);
+		guardar = true;
+	    }
+	}
+	return guardar;
+    }
+
+    private Rampa getNewRampa(double y, double x) {
+	Rampa rampa = new Rampa();
+	rampa.setAltitudIni(y);
+	rampa.setmIni(x);
+	rampa.setMetros(0.0);
+	return rampa;
     }
 
     private double[] obtenerPendienteKm(){
@@ -531,9 +651,6 @@ public class AltimetriaCanvas extends Canvas{
      */
 	public void guardarImagen(String ruta) throws IOException {
 		File file = null;
-		if (ruta == null) {
-			ruta = RUTA_IMG;
-		}
 		file = new File(ruta);
 		if (ruta.contains("jpg")) {
 			ImageIO.write(bImagen, "jpg", file);
