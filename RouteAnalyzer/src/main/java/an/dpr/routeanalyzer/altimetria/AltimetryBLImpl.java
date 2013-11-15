@@ -1,4 +1,4 @@
-package an.dpr.cycling.altimetria;
+package an.dpr.routeanalyzer.altimetria;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import an.dpr.cycling.beans.AltimetryPoint;
-import an.dpr.cycling.beans.AltitudBean;
-import an.dpr.cycling.beans.Climb;
-import an.dpr.cycling.beans.ConfiguracionAltimetriaBean;
+import an.dpr.routeanalyzer.beans.AltimetryPoint;
+import an.dpr.routeanalyzer.beans.AltitudBean;
+import an.dpr.routeanalyzer.beans.Climb;
+import an.dpr.routeanalyzer.beans.ConfiguracionAltimetriaBean;
 
 public class AltimetryBLImpl implements AltimetryBL {
 

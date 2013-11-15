@@ -1,0 +1,18 @@
+reestructuracion
+
+-an.dpr.routeanalyzer: paquete raiz
+-an.dpr.routeanalyzer.bl: logica de negocio general
+-an.dpr.routeanalyzer.reader: lectores o converters de distintos ficheros a objetos propios del analyzer
+-an.dpr.routeanalyzer.beans: beans, sin mas
+-an.dpr.routeanalyzer.utiil: utiles, para exportar a un jar extra
+-an.dpr.routeanalyzer.altimetry: paquete con especificas de altimetria
+-an.dpr.routeanalyzer.hranalize: especificas del analizador de pulsaciones
+
+Integrar en ITrackInfo: interface con la informacion necesaria por el programa
+
+Altimetrias
+AltimetryGenerator (impl gpx, txt)
+	-getAltimetrySet
+
+HR
+	-getHRInfo (getHRList + completar tiempos)

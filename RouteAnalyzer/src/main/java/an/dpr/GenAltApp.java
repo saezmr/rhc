@@ -4,28 +4,19 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
-
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import an.dpr.cycling.altimetria.AltimetriaImagen;
-import an.dpr.cycling.altimetria.AltimetryBL;
-import an.dpr.cycling.altimetria.AltimetryBLImpl;
-import an.dpr.cycling.altimetria.AltimetryContratcs.TipoDatos;
-import an.dpr.cycling.altimetria.AltimetryGenerator;
-import an.dpr.cycling.altimetria.AltimetryGeneratorFactory;
-import an.dpr.cycling.altimetria.ConfiguracionAltimetria;
-import an.dpr.cycling.beans.AltimetryPoint;
-import an.dpr.cycling.beans.Climb;
-import an.dpr.cycling.beans.GPXAltimetriaPoint;
-import an.dpr.cycling.reader.ITrackInfo;
-import an.dpr.cycling.util.UtilSwing;
-import an.dpr.garmin.analize.AltitudBean;
+import an.dpr.routeanalyzer.altimetria.AltimetriaImagen;
+import an.dpr.routeanalyzer.altimetria.AltimetryBL;
+import an.dpr.routeanalyzer.altimetria.AltimetryBLImpl;
+import an.dpr.routeanalyzer.altimetria.ConfiguracionAltimetria;
+import an.dpr.routeanalyzer.beans.AltimetryPoint;
+import an.dpr.routeanalyzer.beans.Climb;
+import an.dpr.routeanalyzer.reader.ITrackInfo;
+import an.dpr.routeanalyzer.util.UtilSwing;
 
 public class GenAltApp {
     
@@ -115,16 +106,4 @@ public class GenAltApp {
 
     }
 
-    private static Set<AltimetryPoint> getSetAltimetria(List<AltitudBean> list) {
-	TreeSet<AltimetryPoint> set = new TreeSet<AltimetryPoint>();
-	GPXAltimetriaPoint ap = null;
-	for (AltitudBean ab : list) {
-	    ap = new GPXAltimetriaPoint();
-	    ap.setTime(ab.getTime());
-	    ap.setAltitud(ab.getAltitud());
-	    ap.setMetros(ab.getMetrosAvanzados());
-	    set.add(ap);
-	}
-	return set;
-    }    
 }

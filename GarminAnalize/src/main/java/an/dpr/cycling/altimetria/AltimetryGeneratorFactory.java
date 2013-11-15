@@ -11,6 +11,7 @@ import an.dpr.cycling.altimetria.AltimetryContratcs.TipoDatos;
  * @author rsaez
  *
  */
+@Deprecated
 public class AltimetryGeneratorFactory {
     
     private static final Logger log = Logger.getLogger(AltimetryGeneratorFactory.class);

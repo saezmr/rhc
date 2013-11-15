@@ -13,10 +13,17 @@ import org.apache.log4j.Logger;
 import org.xmlpull.v1.XmlPullParserException;
 
 import an.dpr.cycling.beans.AltimetryPoint;
+import an.dpr.cycling.beans.AltitudBean;
 import an.dpr.cycling.beans.GPXAltimetriaPoint;
-import an.dpr.garmin.analize.AltitudBean;
-import an.dpr.garmin.analize.XMLGraminTrackConverter;
+import an.dpr.garmin.analize.XMLGarminTrackConverter;
 
+/**
+ * 
+ * @author rsaez
+ * @deprecated
+ * @see GPXTrackInfo
+ */
+@Deprecated
 public class GPXAltGenerator implements AltimetryGenerator {
     
     private static final Logger log = Logger.getLogger(GPXAltGenerator.class);
@@ -24,13 +31,13 @@ public class GPXAltGenerator implements AltimetryGenerator {
     @Override
     public Set<AltimetryPoint> getAltimetrySet(String cadena) {
 	Set<AltimetryPoint> data = null;
-	List<AltitudBean> list;
-	try {
-	    list = XMLGraminTrackConverter.getAltitudList(cadena);
-	    data = getSetAltimetria(list);
-	} catch (XmlPullParserException e) {
-	    log.error("Error parseando gpx", e);
-	}
+//	List<AltitudBean> list;
+//	try {
+//	    list = XMLGarminTrackConverter.getAltitudList(cadena);
+//	    data = getSetAltimetria(list);
+//	} catch (XmlPullParserException e) {
+//	    log.error("Error parseando gpx", e);
+//	}
 	return data;
     }
 

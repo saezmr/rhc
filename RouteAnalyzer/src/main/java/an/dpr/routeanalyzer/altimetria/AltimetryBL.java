@@ -1,12 +1,12 @@
-package an.dpr.cycling.altimetria;
+package an.dpr.routeanalyzer.altimetria;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import an.dpr.cycling.beans.AltimetryPoint;
-import an.dpr.cycling.beans.AltitudBean;
-import an.dpr.cycling.beans.Climb;
+import an.dpr.routeanalyzer.beans.AltimetryPoint;
+import an.dpr.routeanalyzer.beans.AltitudBean;
+import an.dpr.routeanalyzer.beans.Climb;
 
 public interface AltimetryBL {
 
