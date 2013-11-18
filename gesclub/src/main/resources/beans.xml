@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd">
+
+	<!-- Beans del modelo de datos -->
+	<bean id="sociosDao" class="an.dpr.gesclub.dao.SociosDao"/>
+	<bean id="salidasDao" class="an.dpr.gesclub.dao.SalidasDao"/>
+	<bean id="usersDao" class="an.dpr.gesclub.dao.UsersDao"/>
+	<bean id="municipiosDao" class="an.dpr.gesclub.dao.MunicipiosDao"/>
+	<bean id="infoAemet" class="an.dpr.gesclub.ext.InfoAemet"/>
+	
+	<!-- Inyeccion de dependencias en vistas Vaadin --> 
+	<bean id="gestionClubUI" class="an.dpr.gesclub.GestionClubUI" scope="prototype"/>
+	<bean id="loginView" class="an.dpr.gesclub.view.LoginView" scope="prototype"/>
+	<bean id="mainView" class="an.dpr.gesclub.view.MainView" scope="prototype"/>
+	<bean id="logoutView" class="an.dpr.gesclub.view.LogoutView" scope="prototype"/>
+	<bean id="sociosListView" class="an.dpr.gesclub.view.SociosListView" scope="prototype"/>
+	<bean id="salidasListView" class="an.dpr.gesclub.view.SalidasListView" scope="prototype"/>
+	<bean id="clasificacionSalidasView" class="an.dpr.gesclub.view.ClasificacionSalidasView" scope="prototype">
+		<property name="socioDao" ref="sociosDao"/>
+	</bean>
+</beans>

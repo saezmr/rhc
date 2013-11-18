@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/util 
+        http://www.springframework.org/schema/util/spring-util.xsd
+        http://www.springframework.org/schema/context 
+	    http://www.springframework.org/schema/context/spring-context.xsd">
+
+	
+	<context:annotation-config />
+	<import resource="classpath:repository-context.xml" />
+	<import resource="classpath:beans.xml" />
+	
+	<bean id="springConfiguredDataSource" class="org.postgresql.ds.PGSimpleDataSource">
+		<property name="databaseName" value="gesclub" />
+		<property name="serverName" value="localhost" />
+		<property name="user" value="riki" />
+		<property name="password" value="riki" />
+	</bean>
+	
+	<bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
+		<property name="securityManager" ref="securityManager" />
+		<property name="loginUrl" value="/" />
+		<property name="successUrl" value="/" />
+		<property name="unauthorizedUrl" value="/" />
+		<property name="filters">
+			<util:map>
+				<entry key="authc">
+					<bean
+						class="org.apache.shiro.web.filter.authc.PassThruAuthenticationFilter" />
+				</entry>
+			</util:map>
+		</property>
+		<property name="filterChainDefinitions">
+			<value>
+				/rest/** = anon
+				/VAADIN/** = anon
+				/UIDL/** = anon
+				/** = authc
+			</value>
+		</property>
+	</bean>
+
+	<bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
+		<property name="realm" ref="myRealm" />
+	</bean>
+
+	<!-- real shiro.ini <bean id="myReal" class="org.apache.shiro.realm.text.IniRealm"> 
+		<constructor-arg value="classpath:/META-INF/shiro.ini"/> </bean> -->
+	
+	<!-- real DB
+		permissionsLookupEnables-> si true, buscara permisos, si false solo buscara roles 
+	-->
+	<bean id="myRealm" class="org.apache.shiro.realm.jdbc.JdbcRealm">
+		<property name="dataSource" ref="springConfiguredDataSource" />
+		<property name="permissionsLookupEnabled" value="true"/>
+	</bean>
+
+	<bean id="shiroPostProcessor" class="org.apache.shiro.spring.LifecycleBeanPostProcessor" />
+
+	<bean
+		class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"
+		depends-on="shiroPostProcessor" />
+
+	<bean
+		class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
+	<bean id="secureRemoteInvocationExecutor"
+		class="org.apache.shiro.spring.remoting.SecureRemoteInvocationExecutor">
+		<property name="securityManager" ref="securityManager" />
+	</bean>
+
+</beans>
