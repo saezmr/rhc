@@ -1,6 +1,6 @@
 package an.dpr.routeanalyzer.altimetria;
 
-import an.dpr.routeanalyzer.beans.ConfiguracionAltimetriaBean;
+import an.dpr.routeanalyzer.bean.ConfiguracionAltimetriaBean;
 
 import java.awt.Color;
 import java.io.File;

@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import an.dpr.routeanalyzer.beans.AltimetryPoint;
-import an.dpr.routeanalyzer.beans.AltitudBean;
-import an.dpr.routeanalyzer.beans.Climb;
+import an.dpr.routeanalyzer.bean.AltimetryPoint;
+import an.dpr.routeanalyzer.bean.AltitudBean;
+import an.dpr.routeanalyzer.bean.Climb;
 
 public interface AltimetryBL {
 

@@ -29,7 +29,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.xmlpull.v1.XmlPullParserException;
 
-import an.dpr.routeanalyzer.beans.HRBean;
+import an.dpr.pruebafit.Prueba;
+import an.dpr.routeanalyzer.bean.HRBean;
 import an.dpr.routeanalyzer.reader.ITrackInfo;
 import an.dpr.routeanalyzer.util.IOUtil;
 import an.dpr.routeanalyzer.util.UtilSwing;
@@ -56,16 +57,43 @@ public class GarminHRAnalize {
 
     public static void main(String[] args) throws IOException,
 	    XmlPullParserException {
-	File f = UtilSwing.getFile("gpx");
-	String xml = IOUtil.readFile(f);
+	fitTema();
+    }
 
-	ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
-	ITrackInfo tinfo = (ITrackInfo)ctx.getBean("gpxTrackInfo");
+    private static void fitTema() throws IOException {
+
+	List<HRBean> listado = Prueba.getListado();
+	int totalSec = listado.size();
+	Collections.sort(listado);
+	obtenerInfoZonas(listado);
+    }
+
+    private static void gpxTxtTema() throws IOException {
+	File f = UtilSwing.getFile("txt","gpx");
+	ITrackInfo tinfo = getTrackInfoBean(f);
+	String xml = IOUtil.readFile(f);
 	
 	List<HRBean> listado = tinfo.getHRList(xml);
 	int totalSec = listado.size();
 	Collections.sort(listado);
 	obtenerInfoZonas(listado);
+    }
+    
+    
+    private static ITrackInfo getTrackInfoBean(File file) {
+	ITrackInfo ret;
+	ApplicationContext ctx = new ClassPathXmlApplicationContext("beans.xml");
+	String fileName = file.getName();
+	String trackInfoBean = null;
+	if (fileName != null){
+	    if (fileName.contains(".gpx")){
+		trackInfoBean = "gpxTrackInfo";
+	    } else if (fileName.contains(".txt")){
+		trackInfoBean = "polarTrackInfo";
+	    }
+	} 
+	 ret = (ITrackInfo) ctx.getBean(trackInfoBean);
+	return ret;
     }
 
     private static void obtenerInfoZonas(List<HRBean> listado) {

@@ -19,9 +19,9 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 
-import an.dpr.routeanalyzer.beans.AltimetryPoint;
-import an.dpr.routeanalyzer.beans.ConfiguracionAltimetriaBean;
-import an.dpr.routeanalyzer.beans.Rampa;
+import an.dpr.routeanalyzer.bean.AltimetryPoint;
+import an.dpr.routeanalyzer.bean.ConfiguracionAltimetriaBean;
+import an.dpr.routeanalyzer.bean.Rampa;
 
 /**
  * Historial CVS de $Id: AltimetriaCanvas.java $
@@ -93,28 +93,10 @@ public class AltimetriaCanvas extends Canvas{
     private Color colorHorizonte;
     private Color colorRampas = Color.RED;//TODO
 
-    public AltimetriaCanvas(Collection<AltimetryPoint> data,String nombre){
-        this(data, 0.0, nombre, null, null, null, true);
+    public AltimetriaCanvas(){
     }
 
-    public AltimetriaCanvas(Collection<AltimetryPoint> data, Double kmIni,
-	    String nombre, Integer reductor, Integer porcentajeCadaMetros,
-	    Double mostrarRampasMayores, boolean voltearAuto){
-        this.data = data;
-        if (kmIni != null)
-            this.kmIni = kmIni;
-        this.nombrePuerto = nombre != null ? nombre : "SinNombre";
-        this.voltearAuto = voltearAuto;
-        if (reductor != null) 
-            this.reductorX = reductor;
-        if (porcentajeCadaMetros != null)
-            this.porcentajeCadaMetros = porcentajeCadaMetros;
-        if (mostrarRampasMayores != null)
-            this.mostrarRampasMayores = mostrarRampasMayores;
-        init();
-    }
-
-    public AltimetriaCanvas(Collection<AltimetryPoint> data, Double kmIni, 
+    public BufferedImage getImagen(Collection<AltimetryPoint> data, Double kmIni, 
 	    String nombre, ConfiguracionAltimetriaBean conf) {
 	this.conf = conf;
         this.data = data;
@@ -142,7 +124,8 @@ public class AltimetriaCanvas extends Canvas{
         	this.rutaImg = conf.getRutaImg();
         }
         this.setColores(conf);
-        init();
+        BufferedImage img = createImage();
+        return img;
     }
 
     private void setColores(ConfiguracionAltimetriaBean conf){
@@ -155,19 +138,21 @@ public class AltimetriaCanvas extends Canvas{
     }
 
 
-    private void init(){
+    private BufferedImage createImage(){
         this.puntos = obtenerPuntos();
         obtenerMaximos();
         obtenerPendienteMedia();        
         pendienteKms = obtenerPendienteKm();
         rampas = getRampas();
-        bImagen = new BufferedImage(limiteX, limiteY, BufferedImage.TYPE_INT_RGB);
-        crearImagen();
-        img = bImagen.getScaledInstance(limiteX, limiteY, 1);
+        
         this.setSize(limiteX,limiteY);
+        BufferedImage bImagen = new BufferedImage(limiteX, limiteY, BufferedImage.TYPE_INT_RGB);
+        pintaImagen(bImagen);
+        return bImagen;
+        
     }
 
-    private void crearImagen() {
+    private void pintaImagen(BufferedImage bImagen) {
         Graphics g = bImagen.createGraphics();
         g.setFont(new Font("Verdana", Font.PLAIN, 10));
         g.setColor(colorHorizonte);

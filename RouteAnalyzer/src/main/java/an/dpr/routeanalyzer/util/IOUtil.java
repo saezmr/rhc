@@ -19,6 +19,7 @@ public class IOUtil {
 	String line = null;
 	while ((line = br.readLine()) != null) {
 	    xml.append(line);
+	    xml.append("\n");
 	}
 	return xml.toString();
     }

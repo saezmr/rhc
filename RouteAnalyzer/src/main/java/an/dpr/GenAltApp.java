@@ -1,20 +1,26 @@
 package an.dpr;
 
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.RenderedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import an.dpr.routeanalyzer.altimetria.AltimetriaImagen;
+import an.dpr.routeanalyzer.altimetria.AltimetriaCanvas;
 import an.dpr.routeanalyzer.altimetria.AltimetryBL;
 import an.dpr.routeanalyzer.altimetria.AltimetryBLImpl;
 import an.dpr.routeanalyzer.altimetria.ConfiguracionAltimetria;
-import an.dpr.routeanalyzer.beans.AltimetryPoint;
-import an.dpr.routeanalyzer.beans.Climb;
+import an.dpr.routeanalyzer.bean.AltimetryPoint;
+import an.dpr.routeanalyzer.bean.Climb;
 import an.dpr.routeanalyzer.reader.ITrackInfo;
 import an.dpr.routeanalyzer.util.UtilSwing;
 
@@ -75,10 +81,11 @@ public class GenAltApp {
 	 String rutaFile = "/home/rsaez/Documents/ganalize/altimetria" + index
 	 + ".png";
 	 // String rutaFile = "/var/ganalize/altimetria" + index + ".png";
-	 new AltimetriaImagen(climb.getKmIni(), climbData,
-	 ConfiguracionAltimetria.getConfiguracion(), rutaFile);
-	 index++;
-	
+	 AltimetriaCanvas canvas = new AltimetriaCanvas();
+	 BufferedImage img = canvas.getImagen(climbData, climb.getKmIni(), "nombre",
+		 ConfiguracionAltimetria.getConfiguracion());
+	    guardarImagen(rutaFile, img);
+	    index++;
 	 }
     }
 
@@ -93,17 +100,45 @@ public class GenAltApp {
 		kmFin, finalAlto);
 	climbData = altBL.getClimbData(climb, data);
 	String rutaFile = "/home/rsaez/Documents/ganalize/altimetria_km.png";
-	new AltimetriaImagen(climbData,
-		ConfiguracionAltimetria.getConfiguracion(), rutaFile);
+	 AltimetriaCanvas canvas = new AltimetriaCanvas();
+	 BufferedImage img = canvas.getImagen(data, (double)0, "nombre",
+		 ConfiguracionAltimetria.getConfiguracion());
+	 guardarImagen(rutaFile, img);
     }
 
     private static void rutaEntera(Collection<AltimetryPoint> data) {
 	// unica ruta
 	String rutaFile = "/home/rsaez/Documents/ganalize/altimetria.png";
 	// String rutaFile = "/var/ganalize/altimetria.png";
-	new AltimetriaImagen(data, ConfiguracionAltimetria.getConfiguracion(),
-		rutaFile);
+	 AltimetriaCanvas canvas = new AltimetriaCanvas();
+	 BufferedImage img = canvas.getImagen(data, (double)0, "nombre",
+		 ConfiguracionAltimetria.getConfiguracion());
+	 guardarImagen(rutaFile, img);
 
+    }
+
+    /**
+     * Guarda la imagen cargada en la ruta indicada
+     * 
+     * @param ruta
+     * @throws java.io.IOException
+     */
+    private static void guardarImagen(String ruta, BufferedImage img) {
+	try {
+	    File file = null;
+	    file = new File(ruta);
+	    if (ruta.contains("jpg")) {
+		ImageIO.write(img, "jpg", file);
+	    } else if (ruta.contains("png")) {
+		ImageIO.write(img, "png", file);
+	    } else if (ruta.contains("gif")) {
+		ImageIO.write(img, "gif", file);
+	    }
+	    log.info("archivoGuardadoCorrecto " + ruta);// "Archivo guardado correctamente");
+	} catch (IOException e) {
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
 
 }
