@@ -2,8 +2,8 @@ package an.dpr.routeanalyzer.reader;
 
 import java.util.List;
 
-import an.dpr.routeanalyzer.beans.AltitudBean;
-import an.dpr.routeanalyzer.beans.HRBean;
+import an.dpr.routeanalyzer.bean.AltitudBean;
+import an.dpr.routeanalyzer.bean.HRBean;
 
 /**
  * Extrae info de un gpx

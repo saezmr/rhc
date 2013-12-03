@@ -13,8 +13,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import an.dpr.routeanalyzer.beans.AltitudBean;
-import an.dpr.routeanalyzer.beans.HRBean;
+import an.dpr.routeanalyzer.bean.AltitudBean;
+import an.dpr.routeanalyzer.bean.HRBean;
 
 
 public class XMLGarminTrackConverter  implements GPXReader{

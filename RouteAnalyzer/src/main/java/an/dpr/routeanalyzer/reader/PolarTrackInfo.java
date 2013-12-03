@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -12,12 +13,11 @@ import java.util.TreeSet;
 import org.apache.log4j.Logger;
 
 import an.dpr.routeanalyzer.altimetria.ConfiguracionAltimetria;
-import an.dpr.routeanalyzer.beans.AltimetryPoint;
-import an.dpr.routeanalyzer.beans.AltitudBean;
-import an.dpr.routeanalyzer.beans.ConfiguracionAltimetriaBean;
-import an.dpr.routeanalyzer.beans.DatosPolarItem;
-import an.dpr.routeanalyzer.beans.GPXAltimetriaPoint;
-import an.dpr.routeanalyzer.beans.HRBean;
+import an.dpr.routeanalyzer.bean.AltimetryPoint;
+import an.dpr.routeanalyzer.bean.ConfiguracionAltimetriaBean;
+import an.dpr.routeanalyzer.bean.DatosPolarItem;
+import an.dpr.routeanalyzer.bean.HRBean;
+import an.dpr.routeanalyzer.bean.HRZones;
 
 public class PolarTrackInfo implements ITrackInfo {
     
@@ -25,10 +25,28 @@ public class PolarTrackInfo implements ITrackInfo {
 
     @Override
     public List<HRBean> getHRList(String cadena) {
-	log.error("getHRList not yet implemented");
-	return null;
+	List<HRBean> data = new ArrayList<HRBean>();
+	String[] tokens = cadena.split("\n");
+	DatosPolarItem item = null;
+	ConfiguracionAltimetriaBean conf = ConfiguracionAltimetria.getConfiguracion();
+	Integer count = 0;
+	long ms = Calendar.getInstance().getTimeInMillis();
+	for(int i = 0; i<tokens.length; i++){
+	    String linea = tokens[i];
+	    if (linea != null && !linea.trim().equals("")) {
+		item = new DatosPolarItem();
+		item.loadDatos(count++, linea, conf.getSegundosIntervalo());
+		HRBean hr = new HRBean();
+		hr.setHr(item.getPulsaciones());
+		hr.setTime(ms);
+		ms += conf.getSegundosIntervalo()*1000;
+		data.add(hr);
+	    }
+	}
+	data = TrackInfoUtil.completarTiempos(data);
+	return data;
     }
-
+    
     @Override
     public Set<AltimetryPoint> getAltimetrySet(String cadena) {
 	Set<AltimetryPoint> data = new TreeSet<AltimetryPoint>();
@@ -68,6 +86,12 @@ public class PolarTrackInfo implements ITrackInfo {
 	    in.close();
 	}
 	return data;
+    }
+
+
+    @Override
+    public HRZones getHRZones(String cadena) {
+	throw new UnsupportedOperationException("not implemented yet");
     }
 
 }

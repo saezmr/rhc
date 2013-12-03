@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import an.dpr.routeanalyzer.beans.AltimetryPoint;
-import an.dpr.routeanalyzer.beans.AltitudBean;
-import an.dpr.routeanalyzer.beans.HRBean;
+import an.dpr.routeanalyzer.bean.AltimetryPoint;
+import an.dpr.routeanalyzer.bean.AltitudBean;
+import an.dpr.routeanalyzer.bean.HRBean;
+import an.dpr.routeanalyzer.bean.HRZones;
 
 /**
  * Interface para obtener informacion necesaria para el programa de los
@@ -16,8 +17,10 @@ import an.dpr.routeanalyzer.beans.HRBean;
  *
  */
 public interface ITrackInfo {
-    
+
     public List<HRBean> getHRList(String cadena);
+
+    public HRZones getHRZones(String cadena);
 
     public Set<AltimetryPoint> getAltimetrySet(String cadena);
     
