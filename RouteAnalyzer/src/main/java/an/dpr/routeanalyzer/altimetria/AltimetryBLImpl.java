@@ -6,10 +6,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import an.dpr.routeanalyzer.Configuracion;
 import an.dpr.routeanalyzer.bean.AltimetryPoint;
 import an.dpr.routeanalyzer.bean.AltitudBean;
 import an.dpr.routeanalyzer.bean.Climb;
-import an.dpr.routeanalyzer.bean.ConfiguracionAltimetriaBean;
+import an.dpr.routeanalyzer.bean.ConfiguracionBean;
 
 public class AltimetryBLImpl implements AltimetryBL {
 
@@ -151,7 +152,6 @@ public class AltimetryBLImpl implements AltimetryBL {
 	    Double kmFin, boolean finalAlto) {
 	Climb climb = new Climb();
 	Double kmActual = 0.0;
-	Double kmAux = 0.0;
 	boolean inicializado = false;
 	for (AltimetryPoint ap : data) {
 	    kmActual += ap.getMetros();
@@ -163,8 +163,6 @@ public class AltimetryBLImpl implements AltimetryBL {
 	    } else if (kmActual > kmFin) {
 		climb.setFinishPoint(ap);
 		break;
-	    } else if (inicializado) {
-		kmAux += ap.getMetros();
 	    }
 	}
 	return climb;
@@ -176,7 +174,7 @@ public class AltimetryBLImpl implements AltimetryBL {
      * @postConstruct
      */
     public void init() {
-	ConfiguracionAltimetriaBean conf = ConfiguracionAltimetria
+	ConfiguracionBean conf = Configuracion
 		.getConfiguracion();
 	corteNegativo = conf.getCorteNegativoPuertos();
 	minMetros = conf.getMinMetrosPuertos();

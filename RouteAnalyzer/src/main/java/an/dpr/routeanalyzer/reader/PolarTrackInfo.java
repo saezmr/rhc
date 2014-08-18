@@ -12,12 +12,14 @@ import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
-import an.dpr.routeanalyzer.altimetria.ConfiguracionAltimetria;
+import an.dpr.routeanalyzer.Configuracion;
 import an.dpr.routeanalyzer.bean.AltimetryPoint;
-import an.dpr.routeanalyzer.bean.ConfiguracionAltimetriaBean;
+import an.dpr.routeanalyzer.bean.ConfiguracionBean;
 import an.dpr.routeanalyzer.bean.DatosPolarItem;
 import an.dpr.routeanalyzer.bean.HRBean;
 import an.dpr.routeanalyzer.bean.HRZones;
+import an.dpr.routeanalyzer.domain.Activity;
+import an.dpr.routeanalyzer.util.IOUtil;
 
 public class PolarTrackInfo implements ITrackInfo {
     
@@ -28,7 +30,7 @@ public class PolarTrackInfo implements ITrackInfo {
 	List<HRBean> data = new ArrayList<HRBean>();
 	String[] tokens = cadena.split("\n");
 	DatosPolarItem item = null;
-	ConfiguracionAltimetriaBean conf = ConfiguracionAltimetria.getConfiguracion();
+	ConfiguracionBean conf = Configuracion.getConfiguracion();
 	Integer count = 0;
 	long ms = Calendar.getInstance().getTimeInMillis();
 	for(int i = 0; i<tokens.length; i++){
@@ -52,7 +54,7 @@ public class PolarTrackInfo implements ITrackInfo {
 	Set<AltimetryPoint> data = new TreeSet<AltimetryPoint>();
 	String[] tokens = cadena.split("\n");
 	DatosPolarItem item = null;
-	ConfiguracionAltimetriaBean conf = ConfiguracionAltimetria.getConfiguracion();
+	ConfiguracionBean conf = Configuracion.getConfiguracion();
 	Integer count = 0;
 	for(int i = 0; i<tokens.length; i++){
 	    String linea = tokens[i];
@@ -71,7 +73,7 @@ public class PolarTrackInfo implements ITrackInfo {
 	Set<AltimetryPoint> data = new TreeSet<AltimetryPoint>();
 	Integer count = 0;
 	BufferedReader in = new BufferedReader(new FileReader(file));
-	ConfiguracionAltimetriaBean conf = ConfiguracionAltimetria.getConfiguracion();
+	ConfiguracionBean conf = Configuracion.getConfiguracion();
 	DatosPolarItem item = null;
 	if (in != null) {
 	    String linea;
@@ -92,6 +94,18 @@ public class PolarTrackInfo implements ITrackInfo {
     @Override
     public HRZones getHRZones(String cadena) {
 	throw new UnsupportedOperationException("not implemented yet");
+    }
+
+    @Override
+    public List<HRBean> getHRList(File file) throws IOException {
+	String cadena = IOUtil.readFile(file);
+	return getHRList(cadena);
+    }
+
+    @Override
+    public Activity getActivityInfo(File file) {
+	// TODO Auto-generated method stub
+	return null;
     }
 
 }

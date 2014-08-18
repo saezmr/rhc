@@ -1,5 +1,7 @@
 package an.dpr;
 
+import static an.dpr.routeanalyzer.Configuracion.getConfiguracion;
+
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.WindowAdapter;
@@ -29,22 +31,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.xmlpull.v1.XmlPullParserException;
 
-import an.dpr.pruebafit.Prueba;
 import an.dpr.routeanalyzer.bean.HRBean;
+import an.dpr.routeanalyzer.domain.Activity;
 import an.dpr.routeanalyzer.reader.ITrackInfo;
-import an.dpr.routeanalyzer.util.IOUtil;
 import an.dpr.routeanalyzer.util.UtilSwing;
 
 public class GarminHRAnalize {
 
     private static final Logger log = Logger.getLogger(GarminHRAnalize.class);
-    private static final int z0 = 121;
-    private static final int z1 = 135;
-    private static final int z2 = 149;
-    private static final int z3 = 163;
-    private static final int z4 = 176;
-    private static final int z5 = 190;
-    
 
     private static final String ZONA_0 = "zona 0";
     private static final String ZONA_1 = "zona 1";
@@ -57,23 +51,22 @@ public class GarminHRAnalize {
 
     public static void main(String[] args) throws IOException,
 	    XmlPullParserException {
-	fitTema();
+	File f = UtilSwing.getFile("txt","gpx", "fit");
+	activityInfo(f);
+//	hrAnalisis(f);
     }
 
-    private static void fitTema() throws IOException {
-
-	List<HRBean> listado = Prueba.getListado();
-	int totalSec = listado.size();
-	Collections.sort(listado);
-	obtenerInfoZonas(listado);
-    }
-
-    private static void gpxTxtTema() throws IOException {
-	File f = UtilSwing.getFile("txt","gpx");
+    private static void activityInfo(File f) throws IOException {
 	ITrackInfo tinfo = getTrackInfoBean(f);
-	String xml = IOUtil.readFile(f);
+	Activity actInfo = tinfo.getActivityInfo(f);
+	System.out.println(actInfo);
+    }
+
+    private static void hrAnalisis(File f) throws IOException {
+	ITrackInfo tinfo = getTrackInfoBean(f);
+//	String xml = IOUtil.readFile(f);
 	
-	List<HRBean> listado = tinfo.getHRList(xml);
+	List<HRBean> listado = tinfo.getHRList(f);
 	int totalSec = listado.size();
 	Collections.sort(listado);
 	obtenerInfoZonas(listado);
@@ -90,6 +83,8 @@ public class GarminHRAnalize {
 		trackInfoBean = "gpxTrackInfo";
 	    } else if (fileName.contains(".txt")){
 		trackInfoBean = "polarTrackInfo";
+	    } else if (fileName.contains(".fit")){
+		trackInfoBean = "fitTrackInfo";
 	    }
 	} 
 	 ret = (ITrackInfo) ctx.getBean(trackInfoBean);
@@ -101,21 +96,21 @@ public class GarminHRAnalize {
 	hr[8] = listado.size();
 	for (HRBean bean : listado) {
 	    hr[7] += bean.getHr();
-	    if (bean.getHr() < z0) {
+	    if (bean.getHr() < getConfiguracion().getHrZona0()) {
 		hr[0]++;
-	    } else if (bean.getHr() < z1) {
+	    } else if (bean.getHr() < getConfiguracion().getHrZona1()) {
 		hr[1]++;
 		hr[9] += bean.getHr();
-	    } else if (bean.getHr() < z2) {
+	    } else if (bean.getHr() < getConfiguracion().getHrZona2()) {
 		hr[2]++;
 		hr[9] += bean.getHr();
-	    } else if (bean.getHr() < z3) {
+	    } else if (bean.getHr() < getConfiguracion().getHrZona3()) {
 		hr[3]++;
 		hr[9] += bean.getHr();
-	    } else if (bean.getHr() < z4) {
+	    } else if (bean.getHr() < getConfiguracion().getHrZona4()) {
 		hr[4]++;
 		hr[9] += bean.getHr();
-	    } else if (bean.getHr() < z5) {
+	    } else if (bean.getHr() < getConfiguracion().getHrZona5()) {
 		hr[5]++;
 		hr[9] += bean.getHr();
 	    } else {

@@ -19,8 +19,9 @@ import javax.imageio.ImageIO;
 
 import org.apache.log4j.Logger;
 
+import an.dpr.routeanalyzer.ConfiguracionContracts;
 import an.dpr.routeanalyzer.bean.AltimetryPoint;
-import an.dpr.routeanalyzer.bean.ConfiguracionAltimetriaBean;
+import an.dpr.routeanalyzer.bean.ConfiguracionBean;
 import an.dpr.routeanalyzer.bean.Rampa;
 
 /**
@@ -43,7 +44,7 @@ public class AltimetriaCanvas extends Canvas{
     private DecimalFormat df = new DecimalFormat("##0.##");
     private BufferedImage bImagen = null;
     private Image img = null;
-    private ConfiguracionAltimetriaBean conf;
+    private ConfiguracionBean conf;
 
     /**
      * MaximaX -> X maxima de la altimetria (aplicado el reductor)
@@ -97,7 +98,7 @@ public class AltimetriaCanvas extends Canvas{
     }
 
     public BufferedImage getImagen(Collection<AltimetryPoint> data, Double kmIni, 
-	    String nombre, ConfiguracionAltimetriaBean conf) {
+	    String nombre, ConfiguracionBean conf) {
 	this.conf = conf;
         this.data = data;
         if (kmIni != null)
@@ -128,7 +129,7 @@ public class AltimetriaCanvas extends Canvas{
         return img;
     }
 
-    private void setColores(ConfiguracionAltimetriaBean conf){
+    private void setColores(ConfiguracionBean conf){
         colorLineas = conf.getColorLineas();
         colorLineasSuaves = conf.getColorLineasSuaves();
         colorTexto = conf.getColorTexto();
@@ -321,7 +322,7 @@ public class AltimetriaCanvas extends Canvas{
     
     private Color getColorKm(int km){
 	Color color = null;
-	if(ConfiguracionAltimetria.COLOR_KM_RAMPA.equals(conf.getColorKm())){
+	if(ConfiguracionContracts.COLOR_KM_RAMPA.equals(conf.getColorKm())){
 	    if (pendienteKms[km/1000]>conf.getKmCinco()){
 		color = conf.getColorCinco(); 
 	    } else if (pendienteKms[km/1000]>conf.getKmCuatro()){

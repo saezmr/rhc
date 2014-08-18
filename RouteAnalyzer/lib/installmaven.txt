@@ -1,0 +1,2 @@
+mvn install:install-file -DgroupId=com.garmin -DartifactId=fit -Dversion=9.10 -Dfile=fit.jar -Dpackaging=jar
+mvn install:install-file -DgroupId=com.garmin -DartifactId=fit-csv-tool -Dversion=9.10 -Dfile=FitCSVTool.jar -Dpackaging=jar

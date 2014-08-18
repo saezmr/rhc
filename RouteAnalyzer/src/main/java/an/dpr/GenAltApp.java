@@ -1,8 +1,6 @@
 package an.dpr;
 
-import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
@@ -15,10 +13,10 @@ import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import an.dpr.routeanalyzer.Configuracion;
 import an.dpr.routeanalyzer.altimetria.AltimetriaCanvas;
 import an.dpr.routeanalyzer.altimetria.AltimetryBL;
 import an.dpr.routeanalyzer.altimetria.AltimetryBLImpl;
-import an.dpr.routeanalyzer.altimetria.ConfiguracionAltimetria;
 import an.dpr.routeanalyzer.bean.AltimetryPoint;
 import an.dpr.routeanalyzer.bean.Climb;
 import an.dpr.routeanalyzer.reader.ITrackInfo;
@@ -44,8 +42,8 @@ public class GenAltApp {
 	    
 	    
 	    getPuertos(data);
-//	rutaPorKm(data, 25000.0,30000.0, false);
-	    rutaEntera(data);
+//	    rutaPorKm(data, 25000.0,30000.0, false);
+//	    rutaEntera(data);
 	}
     }
     
@@ -59,14 +57,16 @@ public class GenAltApp {
 		trackInfoBean = "gpxTrackInfo";
 	    } else if (fileName.contains(".txt")){
 		trackInfoBean = "polarTrackInfo";
-	    }
+	    } else if (fileName.contains(".fit")){
+	    	trackInfoBean = "fitTrackInfo";
+	    }  
 	} 
 	 ret = (ITrackInfo) ctx.getBean(trackInfoBean);
 	return ret;
     }
 
     private static File getFile(){
-	return UtilSwing.getFile("txt","gpx");
+	return UtilSwing.getFile("tjxt","gpx","fit");
     }
     
     private static void getPuertos(Set<AltimetryPoint> data){
@@ -78,12 +78,11 @@ public class GenAltApp {
 	 List<Climb> climbs = altBL.getClimbs(data);
 	 for (Climb climb : climbs) {
 	 climbData = altBL.getClimbData(climb, data);
-	 String rutaFile = "/home/rsaez/Documents/ganalize/altimetria" + index
-	 + ".png";
-	 // String rutaFile = "/var/ganalize/altimetria" + index + ".png";
+	 String rutaFile = "/home/rsaez/Documents/ganalize/altimetria" + index	 + ".png";
+//	  String rutaFile = "/var/ganalize/altimetria" + index + ".png";
 	 AltimetriaCanvas canvas = new AltimetriaCanvas();
 	 BufferedImage img = canvas.getImagen(climbData, climb.getKmIni(), "nombre",
-		 ConfiguracionAltimetria.getConfiguracion());
+		 Configuracion.getConfiguracion());
 	    guardarImagen(rutaFile, img);
 	    index++;
 	 }
@@ -94,25 +93,26 @@ public class GenAltApp {
 	// climbs
 	AltimetryBL altBL = new AltimetryBLImpl();// TODO spring!!
 	((AltimetryBLImpl) altBL).init();// TODO spring!!
-	Collection<AltimetryPoint> climbData;
+	Collection<AltimetryPoint> kmData;
 
 	Climb climb = ((AltimetryBLImpl) altBL).getClimbByKm(data, kmIni,
 		kmFin, finalAlto);
-	climbData = altBL.getClimbData(climb, data);
+	kmData = altBL.getClimbData(climb, data);
 	String rutaFile = "/home/rsaez/Documents/ganalize/altimetria_km.png";
+//	String rutaFile = "/var/ganalize/altimetria_km.png";
 	 AltimetriaCanvas canvas = new AltimetriaCanvas();
-	 BufferedImage img = canvas.getImagen(data, (double)0, "nombre",
-		 ConfiguracionAltimetria.getConfiguracion());
+	 BufferedImage img = canvas.getImagen(kmData, (double)0, "nombre",
+		 Configuracion.getConfiguracion());
 	 guardarImagen(rutaFile, img);
     }
 
     private static void rutaEntera(Collection<AltimetryPoint> data) {
 	// unica ruta
 	String rutaFile = "/home/rsaez/Documents/ganalize/altimetria.png";
-	// String rutaFile = "/var/ganalize/altimetria.png";
+//	 String rutaFile = "/var/ganalize/altimetria.png";
 	 AltimetriaCanvas canvas = new AltimetriaCanvas();
 	 BufferedImage img = canvas.getImagen(data, (double)0, "nombre",
-		 ConfiguracionAltimetria.getConfiguracion());
+		 Configuracion.getConfiguracion());
 	 guardarImagen(rutaFile, img);
 
     }

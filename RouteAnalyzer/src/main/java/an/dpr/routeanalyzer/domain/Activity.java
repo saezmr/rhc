@@ -12,6 +12,8 @@ public class Activity {
 
     private Long id;
     private Date fecha;
+    private Date fechaFin;
+    private Integer minutosMov;
     private String nombre;
     private Double km;
     private Integer heartRateAvg;
@@ -59,7 +61,24 @@ public class Activity {
 
     @Override
     public String toString() {
-	return "Activity [id=" + id + ", fecha=" + fecha + ", nombre=" + nombre + ", km=" + km
-		+ ", heartRateAvg=" + heartRateAvg + "]";
+	return "Activity [id=" + id + ", fecha=" + fecha + ", fechaFin=" + fechaFin + ", minutosMov="
+		+ minutosMov + ", nombre=" + nombre + ", km=" + km + ", heartRateAvg=" + heartRateAvg + "]";
     }
+
+    public Date getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(Date fechaFin) {
+        this.fechaFin = fechaFin;
+    }
+
+    public Integer getMinutosMov() {
+        return minutosMov;
+    }
+
+    public void setMinutosMov(Integer minutosMov) {
+        this.minutosMov = minutosMov;
+    }
+    
 }

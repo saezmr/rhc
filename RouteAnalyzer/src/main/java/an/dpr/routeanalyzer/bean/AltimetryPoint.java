@@ -23,6 +23,10 @@ public interface AltimetryPoint extends Serializable, Comparable<AltimetryPoint>
     
     public Double getAltitud();
 
+    /**
+     * Metros recorridos desde el punto anterior
+     * @return
+     */
     public Double getMetros();
 
 }

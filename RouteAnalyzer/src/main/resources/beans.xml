@@ -15,4 +15,9 @@
 	</bean>
 	<bean id="polarTrackInfo" class="an.dpr.routeanalyzer.reader.PolarTrackInfo"/>
 	
+	<bean id="fitReader" class="an.dpr.routeanalyzer.reader.FitReader"/>
+	<bean id="fitTrackInfo" class="an.dpr.routeanalyzer.reader.FitTrackInfo">
+		<property name="reader" ref="fitReader"/>
+	</bean>
+	
 </beans>
